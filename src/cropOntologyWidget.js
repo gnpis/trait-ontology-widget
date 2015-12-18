@@ -166,6 +166,14 @@
 					href : libLocalPath+"lib/themes/default/style.min.css"
 				});
 		css_link.appendTo('head');
+		var css_link = $(
+				"<link>",
+				{
+					rel : "stylesheet",
+					type : "text/css",
+					href : libLocalPath+"cropOntologyWidget.css"
+				});
+		css_link.appendTo('head');
 
 	}
 	window.loadJsTree = loadJsTree;
@@ -260,8 +268,12 @@
 
 								// 6 create an instance when the
 								// DOM is ready
-								$('#cropOntologyTree-widget-container').append('<div id ="cropOntologyTree-widget-container-tree"></div>')
-								$('#cropOntologyTree-widget-container-tree')
+								$('#brapiCropOntoWidget').addClass("ontology-widget");
+								$('#brapiCropOntoWidget').append('<div id ="brapiCropOntoWidget-tree-box" class="treeBox" ></div>');
+								$('#brapiCropOntoWidget-tree-box').append('<h2>Traits, methods and scales</h2>');
+								$('#brapiCropOntoWidget-tree-box').append('<div id ="brapiCropOntoWidget-tree" class="tree" ></div>');
+								
+								$('#brapiCropOntoWidget-tree')
 								.jstree(
 										{
 											"core" : {
@@ -282,7 +294,7 @@
 										});
 								// 7 bind to events triggered on
 								// the tree
-								$('#cropOntologyTree-widget-container-tree')
+								$('#brapiCropOntoWidget-tree')
 														.on('activate_node.jstree',
 																function(node,
 																		data) {
@@ -290,31 +302,33 @@
 																});
 
 							});
-							$('#cropOntologyTree-widget-container').append('<div id ="cropOntologyTree-widget-container-details"></div>')
+							$('#brapiCropOntoWidget').append('<div id ="brapiCropOntoWidget-details-box" class="details"></div>');
+							$('#brapiCropOntoWidget-details-box').append('<h2>Details</h2>');
+							$('#brapiCropOntoWidget-details-box').append('<div id ="brapiCropOntoWidget-details" class="details-content"></div>');
 							
 
 						});
 					}
 					
 					function displayDetails(data){
-						var fullNode = $('#cropOntologyTree-widget-container-tree')
+						var fullNode = $('#brapiCropOntoWidget-tree')
 						.jstree(true).get_node(data.node.id);
-						$('#cropOntologyTree-widget-container-details').empty();
-						appendDetails("VariableName", fullNode.data.VariableName);
-						appendDetails("VariableID", fullNode.data.VariableID);
-						appendDetails("Short Name", fullNode.data.VariableShortName);
+						$('#brapiCropOntoWidget-details').empty();
+						appendDetails("Variable name", fullNode.data.VariableName);
+						appendDetails("Variable ID", fullNode.data.VariableID);
+						appendDetails("Short name", fullNode.data.VariableShortName);
 						appendDetails("Description", fullNode.data.Description);
 						appendDetails("Unit", fullNode.data.Unit);
 					}
 					
 					function appendDetails(text, data){
 						if (data != null){
-							$('#cropOntologyTree-widget-container-details').append("</br>"+text+": "+data);
+							$('#brapiCropOntoWidget-details').append('<div class="detail-element"><span>'+text+": </span> "+data+"</div>");
 						}
 					}
 
 					function getSelectedNodeIds(){
-						return $("#cropOntologyTree-widget-container-tree").jstree('get_selected');
+						return $("#brapiCropOntoWidget-tree").jstree('get_selected');
 					}
 
 					window.getSelectedNodeIds = getSelectedNodeIds;
