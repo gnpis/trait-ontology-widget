@@ -43,12 +43,12 @@
 /*
  * TODO : try to do this with shadow DOM
  */
-
+/*
 (function(){
 	
 
 })();
-
+*/
 (
 		function(factory) {
 			"use strict";
@@ -65,8 +65,10 @@
 		(
 				function($, undefined) {
 					"use strict";
+					//TODO: This var must be set according to the enclosing page. To adjust
+//					var libLocalPath="../common/javaScript/brapiOntoWidget/"
+					var libLocalPath=""
 					
-					var libLocalPath="../common/javaScript/brapiOntoWidget/"
 
 					// prevent another load? maybe there is a better way?
 					if ($.cropOntologyWidget) {
