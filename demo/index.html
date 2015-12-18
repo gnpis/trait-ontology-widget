@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Crop Ontology Widget inclusion</title>
+<script src="lib/jquery.js"></script>
+<script src="lib/jstree.min.js"></script>
+<script src="cropOntologyWidget.js">
+	
+</script>
+</head>
+<body>
+
+	<div id="cropOntologyTree-widget-container"></div>
+	<!-- 	look at http://alexmarandon.com/articles/web_widget_jquery/ -->
+
+	<!-- 	<script type="text/javascript" src="cropOntologyWidget.js"> -->
+	<!-- 	</script> -->
+	<script type="text/javascript">
+		// 	$('#cropOntologyTree-widget-container').cropOntologyWidget({'cropOntologyTreeWidgetSrc' : "data/INRA-Wheat-Ontology-2015-10.json" });
+		$('#cropOntologyTree-widget-container').cropOntologyWidget({
+			'cropOntologyTreeWidgetSrc' : "data/INRA-Wheat-Ontology-test.json",
+			"showCheckBoxes" : true
+		});
+
+		function youpla() {
+			// 			var hop = getSelectedNodeIds();
+// 			var hop = $('#cropOntologyTree-widget-container')
+// 					.getSelectedNodeIds();
+var hop = getSelectedNodeIds();
+			window.alert(hop);
+		}
+	</script>
+
+	<button onclick="youpla()">Click me</button>
+
+
+</body>
+</html>
