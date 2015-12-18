@@ -36,7 +36,7 @@
  */
 /*
  * 
- * Extension of code from http://alexmarandon.com/articles/web_widget_jquery/ * 
+ * Extension of code from http://alexmarandon.com/articles/web_widget_jquery/  
  * 
  */
 
@@ -290,7 +290,7 @@
 																});
 
 							});
-							$('#cropOntologyTree-widget-container').append('<div id ="cropOntologyTree-widget-container-details">la tete a toto</div>')
+							$('#cropOntologyTree-widget-container').append('<div id ="cropOntologyTree-widget-container-details"></div>')
 							
 
 						});
@@ -300,13 +300,17 @@
 						var fullNode = $('#cropOntologyTree-widget-container-tree')
 						.jstree(true).get_node(data.node.id);
 						$('#cropOntologyTree-widget-container-details').empty();
-						$('#cropOntologyTree-widget-container-details').prepend("ça boum ?");
-						$('#cropOntologyTree-widget-container-details').prepend("</br>ID : "+fullNode.id);
-						$('#cropOntologyTree-widget-container-details').prepend("</br>VariableName : "+fullNode.data.VariableName);
-						$('#cropOntologyTree-widget-container-details').prepend("</br>VariableName : "+data.obj.VariableName);
-						$('#cropOntologyTree-widget-container-details').prepend("</br>VariableID : "+data.node.VariableID);
-						$('#cropOntologyTree-widget-container-details').prepend("</br>Description : "+data.node.Description);
-						$('#cropOntologyTree-widget-container-details').prepend("</br>Unit : "+data.node.Unit);
+						appendDetails("VariableName", fullNode.data.VariableName);
+						appendDetails("VariableID", fullNode.data.VariableID);
+						appendDetails("Short Name", fullNode.data.VariableShortName);
+						appendDetails("Description", fullNode.data.Description);
+						appendDetails("Unit", fullNode.data.Unit);
+					}
+					
+					function appendDetails(text, data){
+						if (data != null){
+							$('#cropOntologyTree-widget-container-details').append("</br>"+text+": "+data);
+						}
 					}
 
 					function getSelectedNodeIds(){

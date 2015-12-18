@@ -1,133 +1,71 @@
 [
+	{
+		"id": "http://www.inra.fr/RBD6svA9HKJ0vOYKeKox1iH",
+		"text": "INRA Wheat Trait Ontology",
+		"parent": "#",
+		"data": 
+		{
+			"OntologyName": "BreedwheatOntology",
+			"VariableID": "http://www.inra.fr/RBD6svA9HKJ0vOYKeKox1iH",
+			"VariableName": "INRA Wheat Trait Ontology",
+			"ParentVariable": "#"
+		}
+	},
 
- {
-      "id" : "http://www.inra.fr/RBD6svA9HKJ0vOYKeKox1iH",
-      "text" : "INRA Wheat Trait Ontology",
-      "parent" :  "#",
-      "data":{
-      "OntologyName" : "BreedwheatOntology",
-      "VariableID" : "http://www.inra.fr/RBD6svA9HKJ0vOYKeKox1iH",
-      "VariableName" : "INRA Wheat Trait Ontology"
-       
-      ,
-"ParentVariable" : "#"
-       
-       }
-       
-       
-       
-       
-       
-       
-       
-       
-       
-      
-    },
+	{
+		"id": "http://webprotege.stanford.edu/R9SexnNOPSkZrem8pC83jpw",
+		"text": "Agronomic trait",
+		"parent": "http://www.inra.fr/RBD6svA9HKJ0vOYKeKox1iH",
+		"data": 
+		{
+			"OntologyName": "BreedwheatOntology",
+			"VariableID": "http://webprotege.stanford.edu/R9SexnNOPSkZrem8pC83jpw",
+			"VariableName": "Agronomic trait",
+			"ParentVariable": "http://www.inra.fr/RBD6svA9HKJ0vOYKeKox1iH"
+		}
+	},
 
- {
-      "id" : "http://webprotege.stanford.edu/R9SexnNOPSkZrem8pC83jpw",
-      "text" : "Agronomic trait",
-      "parent" : "http://www.inra.fr/RBD6svA9HKJ0vOYKeKox1iH",
-      "data":{
-      "OntologyName" : "BreedwheatOntology",
-      "VariableID" : "http://webprotege.stanford.edu/R9SexnNOPSkZrem8pC83jpw",
-      "VariableName" : "Agronomic trait"
-       
-      ,
-"ParentVariable" : "http://www.inra.fr/RBD6svA9HKJ0vOYKeKox1iH"
-       
-       }
-       
-       
-       
-       
-       
-       
-       
-       
-       
-      
-    },
+	{
+		"id": "http://webprotege.stanford.edu/R9f0GPJhncIK5SAJVShLESn",
+		"text": "% basal flowers sterility",
+		"parent": "http://webprotege.stanford.edu/R9SexnNOPSkZrem8pC83jpw",
+		"data": 
+		{
+			"OntologyName": "BreedwheatOntology",
+			"VariableID": "http://webprotege.stanford.edu/R9f0GPJhncIK5SAJVShLESn",
+			"VariableName": "% basal flowers sterility",
+			"VariableShortName": "SPS_STER",
+			"ParentVariable": "http://webprotege.stanford.edu/R9SexnNOPSkZrem8pC83jpw",
+			"Description": "% de stérilité des fleurs basales",
+			"Unit": "%"
+		}
+	},
+	{
+		"id": "http://webprotege.stanford.edu/R8f24EpxtpydjChh00WvcOf",
+		"text": "Branching Rate",
+		"parent": "http://webprotege.stanford.edu/R9SexnNOPSkZrem8pC83jpw",
+		"data": 
+		{
+			"OntologyName": "BreedwheatOntology",
+			"VariableID": "http://webprotege.stanford.edu/R8f24EpxtpydjChh00WvcOf",
+			"VariableName": "Branching Rate",
+			"VariableShortName": "LRN_PRL",
+			"ParentVariable": "http://webprotege.stanford.edu/R9SexnNOPSkZrem8pC83jpw",
+			"Description": "Taux de ramification",
+			"Unit": "/cm"
+		}
+	},
 
- {
-      "id" : "http://webprotege.stanford.edu/R9f0GPJhncIK5SAJVShLESn",
-      "text" : "% basal flowers sterility",
-      "parent" : "http://webprotege.stanford.edu/R9SexnNOPSkZrem8pC83jpw",
-      "data":{
-      "OntologyName" : "BreedwheatOntology",
-      "VariableID" : "http://webprotege.stanford.edu/R9f0GPJhncIK5SAJVShLESn",
-      "VariableName" : "% basal flowers sterility"
-      ,
-"VariableShortName" : "SPS_STER"
-      ,
-"ParentVariable" : "http://webprotege.stanford.edu/R9SexnNOPSkZrem8pC83jpw"
-      ,
-"Description" : "% de stérilité des fleurs basales"
-      ,
-"Unit" : "%"
-       
-       }
-       
-       
-       
-       
-       
-       
-       
-      
-    },
-
- {
-      "id" : "http://webprotege.stanford.edu/R8f24EpxtpydjChh00WvcOf",
-      "text" : "Branching Rate",
-      "parent" : "http://webprotege.stanford.edu/R9SexnNOPSkZrem8pC83jpw",
-      "data":{
-      "OntologyName" : "BreedwheatOntology",
-      "VariableID" : "http://webprotege.stanford.edu/R8f24EpxtpydjChh00WvcOf",
-      "VariableName" : "Branching Rate"
-      ,
-"VariableShortName" : "LRN_PRL"
-      ,
-"ParentVariable" : "http://webprotege.stanford.edu/R9SexnNOPSkZrem8pC83jpw"
-      ,
-"Description" : "Taux de ramification"
-      ,
-"Unit" : "/cm"
-       
-       
-       }
-       
-       
-       
-       
-       
-       
-      
-    },
-
- {
-      "id" : "http://webprotege.stanford.edu/RCpxfYNIg2pSWKWjqFLQTkw",
-      "text" : "Dry Matter",
-      "parent" : "http://webprotege.stanford.edu/R9SexnNOPSkZrem8pC83jpw",
-      "data":{
-      "OntologyName" : "BreedwheatOntology",
-      "VariableID" : "http://webprotege.stanford.edu/RCpxfYNIg2pSWKWjqFLQTkw",
-      "VariableName" : "Dry Matter"
-       
-      ,
-"ParentVariable" : "http://webprotege.stanford.edu/R9SexnNOPSkZrem8pC83jpw"
-       
-       
-       }
-       
-       
-       
-       
-       
-       
-       
-       
-      
-    }
-  ]
+	{
+		"id": "http://webprotege.stanford.edu/RCpxfYNIg2pSWKWjqFLQTkw",
+		"text": "Dry Matter",
+		"parent": "http://webprotege.stanford.edu/R9SexnNOPSkZrem8pC83jpw",
+		"data": 
+		{
+			"OntologyName": "BreedwheatOntology",
+			"VariableID": "http://webprotege.stanford.edu/RCpxfYNIg2pSWKWjqFLQTkw",
+			"VariableName": "Dry Matter",
+			"ParentVariable": "http://webprotege.stanford.edu/R9SexnNOPSkZrem8pC83jpw"
+		}
+	}
+]
