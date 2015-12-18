@@ -67,7 +67,7 @@
 					"use strict";
 					//TODO: This var must be set according to the enclosing page. To adjust
 //					var libLocalPath="../common/javaScript/brapiOntoWidget/"
-					var libLocalPath=""
+					var libLocalPath=location.pathname+"/";
 					
 
 					// prevent another load? maybe there is a better way?
