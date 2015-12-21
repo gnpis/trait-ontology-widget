@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Crop Ontology Widget inclusion</title>
+<!-- those import are probabbly not necessary anymore -->
 <script src="lib/jquery.js"></script>
 <script src="lib/jstree.min.js"></script>
 <script src="cropOntologyWidget.js">
@@ -14,25 +15,21 @@
 	<div id="brapiCropOntoWidget"></div>
 	<!-- 	look at http://alexmarandon.com/articles/web_widget_jquery/ -->
 
-	<!-- 	<script type="text/javascript" src="cropOntologyWidget.js"> -->
-	<!-- 	</script> -->
+
 	<script type="text/javascript">
-		// 	$('#cropOntologyTree-widget-container').cropOntologyWidget({'cropOntologyTreeWidgetSrc' : "data/INRA-Wheat-Ontology-2015-10.json" });
 		$('#brapiCropOntoWidget').cropOntologyWidget({
 			'cropOntologyTreeWidgetSrc' : "data/INRA-Wheat-Ontology-test.json",
+			'brapiCropOntoWidgetJs' : '/trait-ontology-widget',
 			"showCheckBoxes" : true
 		});
 
-		function youpla() {
-			// 			var hop = getSelectedNodeIds();
-// 			var hop = $('#cropOntologyTree-widget-container')
-// 					.getSelectedNodeIds();
-var hop = getSelectedNodeIds();
-			window.alert(hop);
+		function getIds() {
+			var foo = getSelectedNodeIds();
+			window.alert(foo);
 		}
 	</script>
 
-	<button onclick="youpla()">Click me</button>
+	<button onclick="getIds()">Click me</button>
 
 
 </body>

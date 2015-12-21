@@ -12,6 +12,8 @@
 .ontology-widget {
 	width: 1024px;
 	overflow: auto;
+	font: 13.34px helvetica, arial, freesans, clean, sans-serif;
+	line-height: 1.4em;
 }
 
 .details-content {
@@ -56,30 +58,4 @@
 	background: #F6F6F6 none repeat scroll 0% 0%;
 	border: 1px solid #DDD;
 	border-radius: 5px;
-}
-
-body * {
-	line-height: 1.4em;
-}
-
-body * {
-	line-height: 1.4em;
-}
-
-* {
-	margin: 0px;
-	padding: 0px;
-}
-
-* {
-	margin: 0px;
-	padding: 0px;
-}
-
-body {
-	font: 13.34px helvetica, arial, freesans, clean, sans-serif;
-}
-
-html, body {
-	color: #000;
 }

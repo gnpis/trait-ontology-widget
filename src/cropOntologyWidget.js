@@ -67,7 +67,7 @@
 					"use strict";
 					//TODO: This var must be set according to the enclosing page. To adjust
 //					var libLocalPath="../common/javaScript/brapiOntoWidget/"
-					var libLocalPath=location.pathname+"/";
+					//var libLocalPath=location.pathname+"/";
 					
 
 					// prevent another load? maybe there is a better way?
@@ -79,12 +79,14 @@
 					var jQuery;
 					var cropOntologyTreeWidgetSrc ;
 					var showCheckBoxes;
+					var brapiCropOntoWidgetJs;
 
 					$.cropOntologyWidget = {
 							version : '1',
 
 							defaults : {
 								cropOntologyTreeWidgetSrc : "Provide json URL",
+								brapiCropOntoWidgetJs : location.pathname,
 								showCheckBoxes : false
 							}
 					};
@@ -95,7 +97,7 @@
 		if (window.jQuery === undefined || window.jQuery.fn.jquery !== '1.11.3') {
 			var script_tag = document.createElement('script');
 			script_tag.setAttribute("type", "text/javascript");
-			script_tag.setAttribute("src", libLocalPath+"lib/jquery.js");
+			script_tag.setAttribute("src", brapiCropOntoWidgetJs+"/lib/jquery.js");
 			// TODO: use min version of the lib ASAP
 			if (script_tag.readyState) {
 				script_tag.onreadystatechange = function() { // For old  versions of IE
@@ -133,7 +135,7 @@
 //		|| jQuery.jstree.version !== '3.2.1') {
 		var script_tag_jstree = document.createElement('script');
 		script_tag_jstree.setAttribute("type", "text/javascript");
-		script_tag_jstree.setAttribute("src", libLocalPath+"lib/jstree.min.js");
+		script_tag_jstree.setAttribute("src", brapiCropOntoWidgetJs+"/lib/jstree.min.js");
 		if (script_tag_jstree.readyState) {
 			script_tag_jstree.onreadystatechange = function() { // For
 				// old
@@ -163,7 +165,7 @@
 				{
 					rel : "stylesheet",
 					type : "text/css",
-					href : libLocalPath+"lib/themes/default/style.min.css"
+					href : brapiCropOntoWidgetJs+"/lib/themes/default/style.min.css"
 				});
 		css_link.appendTo('head');
 		var css_link = $(
@@ -171,7 +173,7 @@
 				{
 					rel : "stylesheet",
 					type : "text/css",
-					href : libLocalPath+"cropOntologyWidget.css"
+					href : brapiCropOntoWidgetJs+"/cropOntologyWidget.css"
 				});
 		css_link.appendTo('head');
 
@@ -225,13 +227,15 @@
 //						return false;
 //						}
 //						});
-						libraryLoader();
 						// Restore $ and window.jQuery to their previous values and
 						// store the
 						// new jQuery in our local jQuery variable
 						// already done correcly in library loader
 //						jQuery = window.jQuery.noConflict(true);
 
+						if (arg.brapiCropOntoWidgetJs !== undefined){
+							brapiCropOntoWidgetJs = arg.brapiCropOntoWidgetJs;
+						}
 						if (arg.cropOntologyTreeWidgetSrc !== undefined){
 							cropOntologyTreeWidgetSrc = arg.cropOntologyTreeWidgetSrc;
 						}
@@ -239,6 +243,7 @@
 							showCheckBoxes = arg.showCheckBoxes;
 						}
 
+						libraryLoader();
 
 						// Call our main function
 						main();
