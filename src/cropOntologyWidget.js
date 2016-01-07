@@ -31,7 +31,7 @@
  */
 
 /**
- * @author Cyril Pommier
+ * @author Cyril Pommier, Raphael Flores
  * 
  */
 /*
