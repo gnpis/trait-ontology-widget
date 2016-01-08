@@ -80,6 +80,7 @@
 					var cropOntologyTreeWidgetSrc ;
 					var showCheckBoxes;
 					var brapiCropOntoWidgetJs;
+					var useSearchField;
 
 					$.cropOntologyWidget = {
 							version : '1',
@@ -87,7 +88,8 @@
 							defaults : {
 								cropOntologyTreeWidgetSrc : "Provide json URL",
 								brapiCropOntoWidgetJs : location.pathname,
-								showCheckBoxes : false
+								showCheckBoxes : false,
+								useSearchField : false
 							}
 					};
 
@@ -242,6 +244,10 @@
 						if (arg.showCheckBoxes !== undefined){
 							showCheckBoxes = arg.showCheckBoxes;
 						}
+						if (arg.useSearchField !== undefined){
+							useSearchField = arg.useSearchField;
+						}
+						
 
 						libraryLoader();
 
@@ -276,29 +282,66 @@
 								$('#brapiCropOntoWidget').addClass("ontology-widget");
 								$('#brapiCropOntoWidget').append('<div id ="brapiCropOntoWidget-tree-box" class="treeBox" ></div>');
 								$('#brapiCropOntoWidget-tree-box').append('<h2>Traits, methods and scales</h2>');
-								$('#brapiCropOntoWidget-tree-box').append('<div id ="brapiCropOntoWidget-tree" class="tree" ></div>');
 								
-								$('#brapiCropOntoWidget-tree')
-								.jstree(
-										{
-											"core" : {
-												'data' : $
-												.parseJSON(ontologyJson),
-												"themes" : {
-													"variant" : "large",
-													"icons" : false,
-													"stripes" : true,
-													"expand_selected_onload" : true
-												}
-											},
-											"checkbox" : {
-												"keep_selected_style" : false,
-												"visible" : showCheckBoxes
-											},
-											"plugins" : ["wholerow","checkbox" ]
-										});
-								// 7 bind to events triggered on
-								// the tree
+								if (!useSearchField){
+									$('#brapiCropOntoWidget-tree-box').append('<div id ="brapiCropOntoWidget-tree" class="tree" ></div>');
+									$('#brapiCropOntoWidget-tree')
+									.jstree(
+											{
+												"core" : {
+													'data' : $
+													.parseJSON(ontologyJson),
+													"themes" : {
+														"variant" : "large",
+														"icons" : false,
+														"stripes" : true,
+														"expand_selected_onload" : true
+													}
+												},
+												"checkbox" : {
+													"keep_selected_style" : false,
+													"visible" : showCheckBoxes
+												},
+												"plugins" : ["wholerow","checkbox" ]
+											});
+								}else{
+									$('#brapiCropOntoWidget-tree-box').append('<input id="plugins4_q" value="" class="input" style="margin:0em auto 1em auto; display:block; padding:4px; border-radius:4px; border:1px solid silver;" type="text">');
+									$('#brapiCropOntoWidget-tree-box').append('<div id ="brapiCropOntoWidget-tree" class="tree" ></div>');
+									$('#brapiCropOntoWidget-tree')
+									.jstree(
+											{
+												"core" : {
+													'data' : $
+													.parseJSON(ontologyJson),
+													"themes" : {
+														"variant" : "large",
+														"icons" : false,
+														"stripes" : true,
+														"expand_selected_onload" : true
+													}
+												},
+												"checkbox" : {
+													"keep_selected_style" : false,
+													"visible" : showCheckBoxes
+												},
+												"search":{
+													 "show_only_matches":true
+												},
+												"plugins" : ["wholerow","checkbox", "search"]
+											});
+									
+									var to = false;
+									$('#plugins4_q').keyup(function () {
+									    if(to) { clearTimeout(to); }
+									    to = setTimeout(function () {
+									      var v = $('#plugins4_q').val();
+									      $('#brapiCropOntoWidget-tree').jstree(true).search(v);
+									    }, 250);
+									  });
+								}
+							
+								
+								// On click display details
 								$('#brapiCropOntoWidget-tree')
 														.on('activate_node.jstree',
 																function(node,
