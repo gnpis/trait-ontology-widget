@@ -302,8 +302,9 @@
 													"keep_selected_style" : false,
 													"visible" : showCheckBoxes
 												},
-												"plugins" : ["wholerow","checkbox" ]
+												"plugins" : ["checkbox" ]
 											});
+									//"wholerow", ca be slow
 								}else{
 									$('#brapiCropOntoWidget-tree-box').append('<input id="plugins4_q" value="" class="input" style="margin:0em auto 1em auto; display:block; padding:4px; border-radius:4px; border:1px solid silver;" type="text">');
 									$('#brapiCropOntoWidget-tree-box').append('<div id ="brapiCropOntoWidget-tree" class="tree" ></div>');
@@ -327,7 +328,7 @@
 												"search":{
 													 "show_only_matches":true
 												},
-												"plugins" : ["wholerow","checkbox", "search"]
+												"plugins" : ["checkbox", "search"]
 											});
 									
 									var to = false;
@@ -367,6 +368,10 @@
 						appendDetails("Short name", fullNode.data.VariableShortName);
 						appendDetails("Description", fullNode.data.Description);
 						appendDetails("Unit", fullNode.data.Unit);
+						//Display all
+						$.each( fullNode.data, function( key, value ) {
+							appendDetails( key ,  value );
+							});
 					}
 					
 					function appendDetails(text, data){
