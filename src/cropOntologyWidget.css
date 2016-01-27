@@ -1,14 +1,5 @@
 @CHARSET "UTF-8";
 
-.ontology-widget h2 {
-	margin-top: 15px;
-	margin-bottom: 0px;
-	padding-bottom: 5px;
-	font-size: 16px;
-	color: #333;
-	border-bottom: 1px solid #DDD !important;
-}
-
 .ontology-widget {
 	width: 1024px;
 	overflow: auto;
@@ -16,36 +7,13 @@
 	line-height: 1.4em;
 }
 
-.details-content {
-	position: relative;
-	background: #F6F6F6 none repeat scroll 0% 0%;
-	border: 1px solid #DDD;
-	border-radius: 5px;
-}
-
-.details {
-	float: right;
-	width: 500px;
-}
-
-.detail-element:hover {
-	background-color: #EDEDED;
-}
-
-.detail-element {
-	clear: both;
-	overflow: hidden;
-	line-height: 150%;
-	padding: 5px 0px;
-	border-bottom: 1px solid #DDD;
-}
-
-.detail-element span {
-	float: left;
-	font-weight: bold;
-	padding: 0px 5px;
-	text-align: right;
-	width: 118px;
+.ontology-widget h2 {
+	margin-top: 15px;
+	margin-bottom: 5px;
+	padding-bottom: 5px;
+	font-size: 16px;
+	color: #333;
+	border-bottom: 1px solid #DDD !important;
 }
 
 .treeBox {
@@ -53,9 +21,43 @@
 	width: 500px;
 }
 
+.searchBox {
+	width: 100%;
+	padding: 5px;
+}
+.searchBox .treeSearch {
+	width: 95%;
+	margin: auto;
+}
+
 .tree {
 	position: relative;
 	background: #F6F6F6 none repeat scroll 0% 0%;
 	border: 1px solid #DDD;
 	border-radius: 5px;
+}
+
+.details {
+	float: left;
+	width: 500px;
+	padding-left: 10px;
+}
+
+.details dl {
+  margin-top: 0;
+}
+
+.details dl dt {
+	font-weight: 700;
+	float: left;
+	width: 170px;
+	overflow: hidden;
+	clear: left;
+	text-align: right;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.details dl dd {
+	margin-left: 190px;
 }

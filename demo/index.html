@@ -1,37 +1,24 @@
 <!DOCTYPE html>
 <html>
-<head>
-<meta charset="UTF-8">
-<title>Crop Ontology Widget inclusion</title>
-<!-- those import are probabbly not necessary anymore -->
-<script src="lib/jquery.js"></script>
-<script src="lib/jstree.min.js"></script>
-<script src="cropOntologyWidget.js">
-	
-</script>
-</head>
-<body>
-
-	<div id="brapiCropOntoWidget"></div>
-	<!-- 	look at http://alexmarandon.com/articles/web_widget_jquery/ -->
-
-
-	<script type="text/javascript">
-		$('#brapiCropOntoWidget').cropOntologyWidget({
-			'cropOntologyTreeWidgetSrc' : "data/INRA-Wheat-Ontology-test.json",
-			'brapiCropOntoWidgetJs' : '/trait-ontology-widget',
+	<head>
+		<meta charset="UTF-8">
+		<title>Crop Ontology Widget inclusion</title>
+		<script type="text/javascript" src="cropOntologyWidget.js"></script>
+	</head>
+	<body>
+		<!-- 	look at http://alexmarandon.com/articles/web_widget_jquery/ -->
+		<div id="brapiCropOntoWidget"></div>
+		<script type="text/javascript">
+		var widget = new CropOntologyWidget("#brapiCropOntoWidget", {
+			"ontologyRepositoryFile" : "/data/ontology-repository.json",
 			"showCheckBoxes" : true,
 			"useSearchField" : true
 		});
 
 		function getIds() {
-			var foo = getSelectedNodeIds();
-			window.alert(foo);
+			window.alert(widget.getSelectedNodeIds());
 		}
-	</script>
-
-	<button onclick="getIds()">Click me</button>
-
-
-</body>
+		</script>
+		<button onclick="getIds()">Click me</button>
+	</body>
 </html>
