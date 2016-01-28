@@ -143,18 +143,18 @@ global.CropOntologyWidget = function(selector, options) {
 		"plugins": ["checkbox"]
 	};
 	if (this.useSearchField) {
-		var $input = $('<input placeholder="Search terms..." class="treeSearch" type="text">');
-		this.$searchBox.append($input);
+		this.$input = $('<input placeholder="Search terms..." class="treeSearch" type="text">');
+		this.$searchBox.append(this.$input);
 		jsTreeOptions["search"] = {
 			"show_only_matches": true
 		};
 		jsTreeOptions["plugins"].push("search");
 
 		var to = false;
-		$input.keyup(function() {
+		this.$input.keyup(function() {
 			if (to) clearTimeout(to);
 			to = setTimeout(function() {
-				var v = $input.val();
+				var v = widget.$input.val();
 				widget.jstree.search(v);
 			}, 250);
 		});
@@ -203,8 +203,19 @@ global.CropOntologyWidget = function(selector, options) {
 	this.getSelectedNodeIds = function() {
 		return widget.jstree.get_selected();
 	}
+	this.getSelectedLeafIds = function() {
+		return $.grep(widget.getSelectedNodeIds(), function(id) {
+			var node = widget.jstree.get_node(id);
+			return (!node.children.length && node.state.selected);
+		});
+	}
 	this.resetSelection = function() {
 		widget.jstree.deselect_all();
+	}
+	this.reset = function(){
+		widget.showAll();
+		widget.$input.val("").trigger("keyup");
+		widget.jstree.close_all();
 	}
 
 	return this;
