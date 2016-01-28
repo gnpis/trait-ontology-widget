@@ -45,3 +45,6 @@ local.properties
 deployLocal.sh
 
 demo/data/private/
+
+build/
+node_modules/

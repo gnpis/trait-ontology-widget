@@ -1,0 +1,32 @@
+{
+  "name": "trait-ontology-widget",
+  "version": "1.0.0",
+  "description": "",
+  "author": "C. Pommier, R. Florès, G. Cornut",
+  "license": "BSD-3-Clause",
+  "homepage": "https://github.com/cpommier/trait-ontology-widget#readme",
+  "bugs": {
+    "url": "https://github.com/cpommier/trait-ontology-widget/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cpommier/trait-ontology-widget.git"
+  },
+  "dependencies": {
+    "jquery": "^2.2.0",
+    "jstree": "^3.2.1"
+  },
+  "devDependencies": {
+    "browserify": "^13.0.0",
+    "http-server": "^0.8.5",
+    "uglifyjs": "~2.4.10"
+  },
+  "main": "",
+  "keywords": [
+    "ontology",
+    "trait",
+    "widget",
+    "INRA",
+    "CropOntology"
+  ]
+}
