@@ -113,7 +113,7 @@ global.CropOntologyWidget = function(selector, options) {
 				}));
 			}).then(function() {
 				// Ontologies loaded
-				$.map(arguments, function (jsonResult) {
+				function loadTerms(jsonResult) {
 					if (jsonResult[1] === "success" && $.isArray(jsonResult[0])) {
 						$.map(jsonResult[0], function (term) {
 							if ($.isPlainObject(term)) {
@@ -121,7 +121,14 @@ global.CropOntologyWidget = function(selector, options) {
 							}
 						});
 					}
-				});
+				}
+				if(typeof arguments[1] === "string") {
+					// Only one ontology loaded
+					loadTerms(arguments);
+				} else {
+					// Multiple ontologies
+					$.map(arguments, loadTerms);
+				}
 				cb.call(self, ontologyTerms);
 			});
 	}
