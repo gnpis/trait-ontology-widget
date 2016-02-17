@@ -47,6 +47,8 @@ var defaultOptions = {
 }
 
 global.CropOntologyWidget = function(selector, options) {
+	"use strict";
+
 	this.version = '1';
 	var widget = this;
 	this.basePath;
@@ -153,7 +155,25 @@ global.CropOntologyWidget = function(selector, options) {
 		this.$input = $('<input placeholder="Search terms..." class="treeSearch" type="text">');
 		this.$searchBox.append(this.$input);
 		jsTreeOptions["search"] = {
-			"show_only_matches": true
+			"show_only_matches": true,
+			"search_callback": function (searchText, node) {
+				if (node.state && node.state.hidden === true) {
+					return false;
+				}
+				if (node.text.toLowerCase().indexOf(searchText.toLowerCase()) !== -1) {
+					return true;
+				}
+				/* Search in node data =>
+				if (node.data) {
+					for (var key in node.data) {
+						var val = node.data[key];
+						if (typeof val === "string" && val.indexOf(searchText) !== -1) {
+							return true;
+						}
+					}
+				}*/
+				return false;
+			}
 		};
 		jsTreeOptions["plugins"].push("search");
 
@@ -169,6 +189,15 @@ global.CropOntologyWidget = function(selector, options) {
 	this.$tree.jstree(jsTreeOptions);
 	this.jstree = this.$tree.jstree(true);
 
+	function hideRecusivly(node) {
+		widget.jstree.hide_node(node.id);
+		widget.jstree.deselect_node(node.id);
+		if (node.children && node.children.length > 0) {
+			setTimeout(function () {
+				$.map(node.children, hideRecusivly);
+			}, 0);
+		}
+	}
 	function clearDetails() {
 		widget.$detailList.empty();
 	}
@@ -194,13 +223,12 @@ global.CropOntologyWidget = function(selector, options) {
 		$.map(widget.jstree.get_json(), function(node) {
 			var hide = true;
 			$.each(nodeIds, function(i, requiredID) {
-				if (node.id === requiredID || node.id.indexOf(requiredID+":") === 0) {
+				if (node.id === requiredID) {
 					return hide = false;
 				}
 			});
 			if (hide) {
-				widget.jstree.hide_node(node.id);
-				widget.jstree.deselect_node(node.id);
+				hideRecusivly(node);
 			}
 		});
 	}
