@@ -51,7 +51,6 @@ global.CropOntologyWidget = function(selector, options) {
 
 	this.version = '1';
 	var widget = this;
-	this.basePath;
 
 	// Options
 	this.showCheckBoxes = options.showCheckBoxes || defaultOptions.showCheckBoxes;
@@ -62,21 +61,6 @@ global.CropOntologyWidget = function(selector, options) {
 		return;
 	}
 	this.ontologyBasePath = dirname(this.ontologyRepositoryFile);
-
-	$("script").each(function (i, script) {
-		var path = $(script).attr("src");
-		if (path && path.match(/cropOntologyWidget(\.min)?\.js$/)) {
-			widget.basePath = dirname(path);
-			return false;
-		}
-	});
-	if (this.basePath === undefined) {
-		console.log("Warning: Cannot load CropOntologyWidget CSS: Unable to find base path.");
-	} else {
-		// Load required CSS
-		loadCSS(this.basePath + "/css/themes/default/style.min.css");
-		loadCSS(this.basePath + "/css/cropOntologyWidget.css");
-	}
 
 	// Build Components
 	this.$root = $(selector);
@@ -276,10 +260,6 @@ global.CropOntologyWidget = function(selector, options) {
 	}
 
 	return this;
-}
-
-function loadCSS(href) {
-	$("<link>", {rel: "stylesheet", type: "text/css", href: href}).appendTo('head');
 }
 
 function dirname(path) {

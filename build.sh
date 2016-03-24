@@ -11,17 +11,36 @@ MODULES="./node_modules"
 [ -d "${BUILD_FOLDER}" ] && rm -rf "${BUILD_FOLDER}"
 mkdir "${BUILD_FOLDER}"
 
-SOURCE_FILES="$(ls ./src/js/*.js)"
+JS_FILES="$(ls ./src/js/*.js)"
+CSS_FILES="$(ls ./src/css/*.css)"
 
 # Run browserify => Bundle widget and its dependencies into one file
-echo "Bundling widget..."
-DEST_FILE="${BUILD_FOLDER}/cropOntologyWidget.js"
-"${MODULES}/browserify/bin/cmd.js" "${SOURCE_FILES}" -o "${DEST_FILE}"
+echo "Bundling:"
+DEST_FILE="${BUILD_FOLDER}/cropOntologyWidget"
+
+echo -ne "[JS]\t"
+echo " ${JS_FILES} => ${DEST_FILE}.js "
+"${MODULES}/browserify/bin/cmd.js" "${JS_FILES}" -o "${DEST_FILE}.js"
+
+echo -ne "[CSS]\t"
+echo " ${CSS_FILES} => ${DEST_FILE}.css "
+#"${MODULES}/npm-css/bin/npm-css" "${CSS_FILES}" -o "${DEST_FILE}.css"
+"${MODULES}/less/bin/lessc" "${CSS_FILES}" "${DEST_FILE}.css"
+
+echo ""
 
 # Run uglify => Reduce file size
-echo "Minifying widget..."
-DEST_MIN_FILE="${BUILD_FOLDER}/cropOntologyWidget.min.js"
-"${MODULES}/uglifyjs/bin/uglifyjs" "${DEST_FILE}" -o "${DEST_MIN_FILE}"
+echo "Minifying:"
+DEST_MIN_FILE="${BUILD_FOLDER}/cropOntologyWidget.min"
+
+echo -ne "[JS]\t"
+echo " ${DEST_FILE}.js => ${DEST_MIN_FILE}.js "
+"${MODULES}/uglifyjs/bin/uglifyjs" "${DEST_FILE}.js" -o "${DEST_MIN_FILE}.js"
+
+echo -ne "[CSS]\t"
+echo " ${DEST_FILE}.css => ${DEST_MIN_FILE}.css "
+"${MODULES}/clean-css/bin/cleancss" "${DEST_FILE}.css" -o "${DEST_MIN_FILE}.css"
+
+echo ""
 
 cp -R ./demo/* "${BUILD_FOLDER}"
-cp -R ./src/css "${BUILD_FOLDER}"

@@ -19,7 +19,9 @@
   "devDependencies": {
     "browserify": "^13.0.0",
     "http-server": "^0.8.5",
-    "uglifyjs": "~2.4.10"
+    "uglifyjs": "~2.4.10",
+    "clean-css": "~3.4.10",
+    "less": "~2.6.1"
   },
   "main": "",
   "keywords": [
