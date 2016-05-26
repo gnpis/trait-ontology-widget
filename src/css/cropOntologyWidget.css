@@ -88,10 +88,3 @@
 .jstree .jstree-last {
 	background: none;
 }
-@media (max-width: 768px) {
-	.jstree .jstree-node, .jstree .jstree-icon, .jstree .jstree-file,
-	.jstree .jstree-folder, .jstree .jstree-ok, .jstree .jstree-checkbox,
-	.jstree .jstree-er {
-		background-image: data-uri('node_modules/jstree/src/themes/default/40px.png');
-	}
-}
