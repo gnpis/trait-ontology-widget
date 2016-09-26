@@ -50,21 +50,20 @@
 	padding-left: 10px;
 }
 
-.ontology-widget .details dl {
-  margin-top: 0;
+.ontology-widget .details .detail {
+	margin-bottom: 15px;
+	overflow: auto;
 }
 
-.ontology-widget .details dl dt {
+.ontology-widget .details .key {
 	font-weight: 700;
-	float: left;
 	width: 120px;
+	float: left;
 	clear: left;
 	text-align: right;
-	margin-bottom: 10px;
 }
 
-.ontology-widget .details dl dd {
-	margin-bottom: 10px;
+.ontology-widget .details .value {
 	margin-left: 130px;
 	word-wrap: break-word;
 }
