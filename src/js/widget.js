@@ -201,9 +201,18 @@ global.CropOntologyWidget = function(selector, options) {
 	function clearDetails() {
 		widget.$detailList.empty();
 	}
-	function appendDetails(text, data) {
+	function appendDetails(text, data, optionalPrefix) {
+		var prefix = optionalPrefix || "";
 		if (data) {
-			widget.$detailList.append("<dt>" + text + "</dt><dd>" + data + "</dd>");
+			if (typeof data === 'string') {
+				var key = prefix + text;
+				var value = data;
+				widget.$detailList.append("<dt>" + key + "</dt><dd>" + data + "</dd>");
+			} else if (typeof data === 'object') {
+				$.each(data, function(t, d) {
+					return appendDetails(t, d, prefix + text + " - ");
+				});
+			}
 		}
 	}
 	this.$tree.on('activate_node.jstree', function (_, data) {
