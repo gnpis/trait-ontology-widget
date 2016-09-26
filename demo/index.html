@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Crop Ontology Widget inclusion</title>
+		<script type="text/javascript" src="cropOntologyWidget.min.js"></script>
+	</head>
+	<body>
+		<div id="brapiCropOntoWidget"></div>
+		<script type="text/javascript">
+		var widget = new CropOntologyWidget("#brapiCropOntoWidget", {
+			"ontologyRepositoryFile": "/data/ontology-repository.json",
+			"showCheckBoxes": true, "useSearchField": true
+		});
+
+		function getIds() {
+			window.alert(widget.getSelectedNodeIds());
+		}
+		</script>
+		<button onclick="getIds()">Click me</button>
+	</body>
+</html>

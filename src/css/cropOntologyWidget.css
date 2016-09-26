@@ -1,0 +1,70 @@
+@CHARSET "UTF-8";
+
+.ontology-widget {
+	width: 100%;
+	overflow: auto;
+	font: 13.34px helvetica, arial, freesans, clean, sans-serif;
+	line-height: 1.4em;
+}
+
+.ontology-widget h2 {
+	margin-top: 15px;
+	margin-bottom: 5px;
+	padding-bottom: 5px;
+	font-size: 16px;
+	color: #333;
+	border-bottom: 1px solid #DDD !important;
+}
+
+.ontology-widget .treeBox {
+	float: left;
+	width: 55%;
+}
+
+.ontology-widget .searchBox {
+	width: 100%;
+	padding: 5px;
+}
+
+.ontology-widget .searchBox .treeSearch {
+	width: 95%;
+	margin: auto;
+	border-radius: 2px;
+	border: 1px solid silver;
+	padding: 5px 5px;
+}
+
+.ontology-widget .tree {
+	position: relative;
+	background: #F6F6F6 none repeat scroll 0% 0%;
+	border: 1px solid #DDD;
+	border-radius: 5px;
+	overflow: hidden;
+	max-height: 500px;
+	overflow-y: inherit;
+}
+
+.ontology-widget .details {
+	float: left;
+	width: 43%;
+	padding-left: 10px;
+}
+
+.ontology-widget .details dl {
+  margin-top: 0;
+}
+
+.ontology-widget .details dl dt {
+	font-weight: 700;
+	float: left;
+	width: 120px;
+	clear: left;
+	text-align: right;
+	margin-bottom: 10px;
+}
+
+.ontology-widget .details dl dd {
+	margin-bottom: 10px;
+	margin-left: 130px;
+	word-wrap: break-word;
+}

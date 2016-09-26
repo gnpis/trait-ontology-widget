@@ -1,0 +1,207 @@
+[
+	{
+		"id": "INRA Wheat Ontology",
+		"text": "INRA Wheat Ontology",
+		"parent": "#",
+		"data": 
+		{
+			"Ontology": "INRA Wheat Ontology",
+			"Variable Licence": "CC-BY",
+			"Author": "inra GEDEC, J. Legouis",
+			"Copyright": ""
+		}
+	},
+
+	{
+		"id": "Agronomic trait",
+		"text": "Agronomic trait",
+		"parent": "INRA Wheat Ontology",
+		"data": 
+		{
+			"Ontology": "INRA Wheat Ontology"
+		}
+	},
+
+	{
+		"id": "Morphological trait",
+		"text": "Morphological trait",
+		"parent": "INRA Wheat Ontology",
+		"data": 
+		{
+			"Ontology": "INRA Wheat Ontology"
+		}
+	},
+
+	{
+		"id": "http://webprotege.stanford.edu/RCHyQ6b0iV3Fat9z24DLaNE",
+		"text": "Thousand grain weight",
+		"parent": "Agronomic trait",
+		"data": 
+		{
+			"OntologyName": "INRA Wheat Ontology",
+			"Trait ID": "http://webprotege.stanford.edu/RCHyQ6b0iV3Fat9z24DLaNE",
+			"Trait": "Thousand grain weight",
+			"Main trait abbreviation": "TKW",
+			"Alternative trait abbreviations": "#",
+			"Entity": "grain",
+			"Attribute": "wheight",
+			"Language": "en"
+		}
+	},
+
+	{
+		"id": "BWO:00000001",
+		"text": "Grain Yield",
+		"parent": "Agronomic trait",
+		"data": 
+		{
+			"OntologyName": "INRA Wheat Ontology",
+			"Trait ID": "BWO:00000001",
+			"Trait": "Grain Yield",
+			"Main trait abbreviation": "GY",
+			"Alternative trait abbreviations": "#",
+			"Entity": "grain",
+			"Language": "en"
+		}
+	},
+
+	{
+		"id": "BWO:00000015",
+		"text": "Awnedness",
+		"parent": "Morphological trait",
+		"data": 
+		{
+			"OntologyName": "INRA Wheat Ontology",
+			"Trait ID": "BWO:00000015",
+			"Trait": "Awnedness",
+			"Alternative trait abbreviations": "#",
+			"Language": "en"
+		}
+	},
+
+	{
+		"id": "BWO:00000016",
+		"text": "Leaf Area",
+		"parent": "Morphological trait",
+		"data": 
+		{
+			"OntologyName": "INRA Wheat Ontology",
+			"Trait ID": "BWO:00000016",
+			"Trait": "Leaf Area",
+			"Alternative trait abbreviations": "#",
+			"Entity": "Leaf",
+			"Attribute": "Area",
+			"Language": "en"
+		}
+	},
+	{
+		"id": "http://www.inra.fr/R7XchNM1lkc0mCakWOL1tK",
+		"text": "Thousand-kernels weight 0% humidity",
+		"parent": "http://webprotege.stanford.edu/RCHyQ6b0iV3Fat9z24DLaNE",
+		"data": 
+		{
+			"OntologyName": "INRA Wheat Ontology",
+			"Trait ID": "http://webprotege.stanford.edu/RCHyQ6b0iV3Fat9z24DLaNE",
+			"Variable ID": "http://webprotege.stanford.edu/RCHyQ6b0iV3Fat9z24DLaNE",
+			"Trait": "Thousand grain weight",
+			"Variable full name": "Thousand-kernels weight 0% humidity",
+			"Language": "en",
+			"Method ID": "BWO:10000001",
+			"Method": "Thousand-kernels weight 0% humidity",
+			"Scale ID": "BWO:20000001",
+			"Scale name": "g"
+		}
+	},
+
+	{
+		"id": "http://www.inra.fr/R8s3zU6spnOkpXSPmYvm4",
+		"text": "Thousand-kernels weight 15% humidity",
+		"parent": "http://webprotege.stanford.edu/RCHyQ6b0iV3Fat9z24DLaNE",
+		"data": 
+		{
+			"OntologyName": "INRA Wheat Ontology",
+			"Trait ID": "http://webprotege.stanford.edu/RCHyQ6b0iV3Fat9z24DLaNE",
+			"Variable ID": "http://webprotege.stanford.edu/RCHyQ6b0iV3Fat9z24DLaNE",
+			"Trait": "Thousand grain weight",
+			"Variable full name": "Thousand-kernels weight 15% humidity",
+			"Language": "en",
+			"Method ID": "BWO:10000002",
+			"Method": "Thousand-kernels weight 15% humidity",
+			"Scale ID": "BWO:20000002",
+			"Scale name": "g"
+		}
+	},
+
+	{
+		"id": "BWO:0000002",
+		"text": "Grain yield 0% humidity",
+		"parent": "BWO:00000001",
+		"data": 
+		{
+			"OntologyName": "INRA Wheat Ontology",
+			"Trait ID": "BWO:00000001",
+			"Variable ID": "BWO:00000001",
+			"Trait": "Grain Yield",
+			"Variable full name": "Grain yield 0% humidity",
+			"Language": "en",
+			"Method ID": "BWO:10000003",
+			"Method": "Grain Yield 15% humidity",
+			"Scale ID": "BWO:20000003",
+			"Scale name": "q/ha or g/m²"
+		}
+	},
+
+	{
+		"id": "BWO:0000003",
+		"text": "Grain yield 15% humidity",
+		"parent": "BWO:00000001",
+		"data": 
+		{
+			"OntologyName": "INRA Wheat Ontology",
+			"Trait ID": "BWO:00000001",
+			"Variable ID": "BWO:00000002",
+			"Trait": "Grain Yield",
+			"Variable full name": "Grain yield 15% humidity",
+			"Language": "en",
+			"Method ID": "BWO:10000004",
+			"Method": "Grain Yield 0% humidity",
+			"Scale ID": "BWO:20000004",
+			"Scale name": "q/ha or g/m131"
+		}
+	},
+
+	{
+		"id": "BWO:00000005",
+		"text": "Awnedness: awnless (NB) / awned (B)",
+		"parent": "BWO:00000015",
+		"data": 
+		{
+			"OntologyName": "INRA Wheat Ontology",
+			"Trait ID": "BWO:00000015",
+			"Variable ID": "BWO:00000015",
+			"Trait": "Awnedness",
+			"Variable full name": "Awnedness: awnless (NB) / awned (B)",
+			"Language": "en",
+			"Scale ID": "BWO:20000005",
+			"Scale name": "B-NB"
+		}
+	},
+
+	{
+		"id": "http://webprotege.stanford.edu/R9nlAQ66gKdIpWSWSc3pWsG",
+		"text": "Leaf area",
+		"parent": "BWO:00000016",
+		"data": 
+		{
+			"OntologyName": "INRA Wheat Ontology",
+			"Trait ID": "BWO:00000016",
+			"Variable ID": "BWO:00000016",
+			"Trait": "Leaf Area",
+			"Variable full name": "Leaf area",
+			"Language": "en",
+			"Scale ID": "BWO:20000006",
+			"Scale name": "cm²/plant"
+		}
+	}
+
+]
