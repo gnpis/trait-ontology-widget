@@ -33,8 +33,8 @@
 /**
  * @author Cyril Pommier, Raphael Flores, Guillaume Cornut
  *
- * Extension of code from http://alexmarandon.com/articles/web_widget_jquery/
- * TODO : try to do this with shadow DOM
+ * Inspired from http://alexmarandon.com/articles/web_widget_jquery/
+ * Using Node/NPM dependencies with browserify
  */
 
 // Require jQuery & jsTree
@@ -44,6 +44,15 @@ require("jstree");
 var defaultOptions = {
 	showCheckBoxes: false,
 	useSearchField: false
+}
+
+// Array contains
+function contains(arr, item) {
+	return arr.indexOf(item) !== -1;
+}
+// Array remove
+function remove(arr, item) {
+	arr.splice(arr.indexOf(item), 1);
 }
 
 global.CropOntologyWidget = function(selector, options) {
@@ -88,6 +97,7 @@ global.CropOntologyWidget = function(selector, options) {
 	this.$detailList = $('<dl></dl>');
 	this.$details.append(this.$detailList);
 
+	var allNodeIds = [];
 	function loadOntologyData(self, cb) {
 		var ontologyTerms = [];
 		// Load Ontology repository JSON
@@ -104,6 +114,7 @@ global.CropOntologyWidget = function(selector, options) {
 						$.map(jsonResult[0], function (term) {
 							if ($.isPlainObject(term)) {
 								ontologyTerms.push(term);
+								allNodeIds.push(term.id);
 							}
 						});
 					}
@@ -173,15 +184,6 @@ global.CropOntologyWidget = function(selector, options) {
 	this.$tree.jstree(jsTreeOptions);
 	this.jstree = this.$tree.jstree(true);
 
-	function hideRecusivly(node) {
-		widget.jstree.hide_node(node.id);
-		widget.jstree.deselect_node(node.id);
-		if (node.children && node.children.length > 0) {
-			setTimeout(function () {
-				$.map(node.children, hideRecusivly);
-			}, 0);
-		}
-	}
 	function clearDetails() {
 		widget.$detailList.empty();
 	}
@@ -224,19 +226,55 @@ global.CropOntologyWidget = function(selector, options) {
 	this.showAll = function () {
 		widget.jstree.show_all();
 	}
-	this.showOnlyParents = function(nodeIds) {
-		widget.showAll();
-		$.map(widget.jstree.get_json(), function(node) {
-			var hide = true;
-			$.each(nodeIds, function(i, requiredID) {
-				if (node.id === requiredID) {
-					return hide = false;
-				}
-			});
-			if (hide) {
-				hideRecusivly(node);
+	this.hideAll = function () {
+		widget.jstree.hide_all();
+	}
+	/**
+	 * Search node identifier using a predicate on nodes
+	 */
+	this.searchNodeIds = function(nodes, predicate) {
+		var filtered = [];
+		$.map(nodes, function(node) {
+			if (predicate(node)) {
+				filtered.push(node.id);
+			}
+			if (node.children) {
+				filtered = filtered.concat(widget.searchNodeIds(node.children, predicate));
 			}
 		});
+		return filtered;
+	}
+	/**
+	* Hide all nodes except the given nodes, their parents and their children
+	*/
+	this.showOnly = function(requiredNodeIds) {
+		var shownNodeIds = [];
+		var hiddenNodeIds = [];
+		$.map(allNodeIds, function(nodeId) {
+			if(requiredNodeIds.indexOf(nodeId) !== -1) {
+				var node = widget.jstree.get_node(nodeId);
+				shownNodeIds.push(nodeId);
+				if (node.children_d) shownNodeIds = shownNodeIds.concat(node.children_d);
+				if (node.parents) shownNodeIds = shownNodeIds.concat(node.parents);
+				if (contains(hiddenNodeIds, nodeId)) {
+					remove(hiddenNodeIds, nodeId);
+				}
+			} else if(!contains(shownNodeIds, nodeId)) {
+				hiddenNodeIds.push(nodeId);
+			}
+		})
+		// using setTimeout to delay DOM modifications (reducing UI blocking)
+		setTimeout(function() {
+			$.map(hiddenNodeIds, function(nodeId) {
+				widget.jstree.hide_node(nodeId);
+				widget.jstree.deselect_node(nodeId);
+			});
+		}, 0);
+		setTimeout(function() {
+			$.map(shownNodeIds, function(nodeId) {
+				widget.jstree.show_node(nodeId);
+			});
+		}, 0);
 	}
 	this.setSelectionChangeHandler = function(handler) {
 		widget.$tree.on('changed.jstree', handler);

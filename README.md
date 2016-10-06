@@ -28,7 +28,7 @@ $ npm install     # produces a node_modules/ folder
 ```shell
 $ ./run.sh        # build & run a static HTTP server
 ```
-5. Open http://localhost:8000
+5. Open http://localhost:8888
 
 ## Dependencies
 
