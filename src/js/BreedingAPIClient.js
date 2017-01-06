@@ -56,18 +56,19 @@ function fetchAllPages(breedingAPIEndpoint, path, pageSize) {
   return deferred;
 }
 
-module.exports =  {
+
+module.exports = function BreedingAPIClient(breedingAPIEndpoint) {
   /**
   * Asynchronously load list of observation variable ontologies of a BreedingAPI endpoint
   */
-  fetchOntologies: function(breedingAPIEndpoint) {
+  this.fetchOntologies= function() {
     return fetchAllPages(breedingAPIEndpoint, "/ontologies", 100);
-  },
+  }
 
   /**
    * Asynchronously load list of observation variables of a BreedingAPI endpoint
    */
-  fetchVariables: function (breedingAPIEndpoint) {
+  this.fetchVariables = function () {
     return fetchAllPages(breedingAPIEndpoint, "/variables", 200);
   }
 }
