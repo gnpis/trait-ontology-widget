@@ -12,16 +12,17 @@
     "type": "git",
     "url": "git+https://github.com/cpommier/trait-ontology-widget.git"
   },
+  "scripts": {},
   "dependencies": {
     "jquery": "^2.2.0",
     "jstree": "^3.2.1"
   },
   "devDependencies": {
     "browserify": "^13.0.0",
-    "http-server": "^0.8.5",
-    "uglifyjs": "~2.4.10",
     "clean-css": "~3.4.10",
-    "less": "~2.6.1"
+    "http-server": "^0.8.5",
+    "less": "^2.7.2",
+    "uglifyjs": "~2.4.10"
   },
   "main": "",
   "keywords": [
@@ -29,6 +30,7 @@
     "trait",
     "widget",
     "INRA",
-    "CropOntology"
+    "CropOntology",
+    "BreedingAPI"
   ]
 }

@@ -41,6 +41,12 @@
 var $ = require("jquery");
 require("jstree");
 
+// Require the breeding API client
+var breedingAPIClient = require("./breedingAPIClient");
+global.breedingAPIClient = breedingAPIClient;
+
+var treeBuilder = require('./treeBuilder');
+
 var defaultOptions = {
 	showCheckBoxes: false,
 	useSearchField: false
@@ -57,19 +63,16 @@ function remove(arr, item) {
 
 global.CropOntologyWidget = function(selector, options) {
 	"use strict";
-
-	this.version = '1';
 	var widget = this;
 
 	// Options
 	this.showCheckBoxes = options.showCheckBoxes || defaultOptions.showCheckBoxes;
 	this.useSearchField = options.useSearchField || defaultOptions.useSearchField;
-	this.ontologyRepositoryFile = options.ontologyRepositoryFile;
-	if(!this.ontologyRepositoryFile) {
-		console.log("ERROR: Cannot initialize CropOntologyWidget. Missing parameter 'ontologyRepositoryFile'.");
+	this.breedingAPIEndpoint = options.breedingAPIEndpoint;
+	if(!this.breedingAPIEndpoint) {
+		console.log("ERROR: Cannot initialize CropOntologyWidget. Missing parameter 'breedingAPIEndpoint'.");
 		return;
 	}
-	this.ontologyBasePath = dirname(this.ontologyRepositoryFile);
 
 	// Build Components
 	this.$root = $(selector);
@@ -98,54 +101,60 @@ global.CropOntologyWidget = function(selector, options) {
 	this.$details.append(this.$detailList);
 
 	var allNodeIds = [];
-	function loadOntologyData(self, cb) {
-		var ontologyTerms = [];
-		// Load Ontology repository JSON
-		$.getJSON(widget.ontologyRepositoryFile)
-			.then(function(ontologyRepository) {
-				// Load all ontology JSON from ontology repository
-				return $.when.apply($, $.map(ontologyRepository, function(ontology) {
-					return $.getJSON(widget.ontologyBasePath+"/"+ontology);
-				}));
-			}).then(function() {
-				// Ontologies loaded
-				function loadTerms(jsonResult) {
-					if (jsonResult[1] === "success" && $.isArray(jsonResult[0])) {
-						$.map(jsonResult[0], function (term) {
-							if ($.isPlainObject(term)) {
-								ontologyTerms.push(term);
-								allNodeIds.push(term.id);
-							}
-						});
-					}
-				}
-				if(typeof arguments[1] === "string") {
-					// Only one ontology loaded
-					loadTerms(arguments);
-				} else {
-					// Multiple ontologies
-					$.map(arguments, loadTerms);
-				}
-				cb.call(self, ontologyTerms);
+	function loadOntologyTree(self, cb) {
+		var ontologiesRequest = breedingAPIClient.fetchOntologies(widget.breedingAPIEndpoint);
+		var variablesRequest = breedingAPIClient.fetchVariables(widget.breedingAPIEndpoint);
+
+		ontologiesRequest.then(function(ontologies) {
+			var nodes = [];
+
+			// Add ontology root node
+			$.map(ontologies, function(ontology) {
+				var ontologyRootNode = treeBuilder.ontologyAsRootNode(ontology);
+				allNodeIds.push(ontologyRootNode.id);
+			  nodes.push(ontologyRootNode);
 			});
+
+			// Display ontologies as root nodes
+			cb.call(self, nodes);
+
+			// Wait for jstree to be ready
+			widget.$tree.on('ready.jstree', function() {
+
+				// Load variables separatly because jstree can't handle more than 1500 nodes at once
+				variablesRequest.then(function(variables) {
+					$.map(variables, function(variable) {
+						var childNodes = treeBuilder.variableAsNodes(variable);
+
+						$.map(childNodes, function(childNode) {
+							allNodeIds.push(childNode.id);
+
+							var parent = childNode.parent;
+							delete childNode.parent;
+							widget.jstree.create_node(parent, childNode);
+						});
+					});
+				});
+			});
+		});
 	}
 
 	var jsTreeOptions = {
 		"core": {
+			"check_callback" : true,
 			"themes": {
 				"variant": "large", "icons": false,
 				"stripes": true, "expand_selected_onload": true
 			},
-			"data": function (obj, cb) {
-				loadOntologyData(this, cb);
-			}
+			"data": loadOntologyTree
 		},
 		"checkbox": {
 			"keep_selected_style": false,
 			"visible": widget.showCheckBoxes
 		},
-		"plugins": ["checkbox"]
+		"plugins": ["checkbox", "unique"]
 	};
+
 	if (this.useSearchField) {
 		this.$input = $('<input placeholder="Search terms..." class="treeSearch" type="text">');
 		this.$searchBox.append(this.$input);
@@ -298,10 +307,4 @@ global.CropOntologyWidget = function(selector, options) {
 	}
 
 	return this;
-}
-
-function dirname(path) {
-	var dir = path.replace(/\/[^\/]*\/?$/, '');
-	if (dir === path) return "";
-	return dir;
 }

@@ -11,7 +11,7 @@ MODULES="./node_modules"
 [ -d "${BUILD_FOLDER}" ] && rm -rf "${BUILD_FOLDER}"
 mkdir "${BUILD_FOLDER}"
 
-JS_FILES="$(ls ./src/js/*.js)"
+JS_FILES="./src/js/main.js"
 CSS_FILES="$(ls ./src/css/*.css)"
 
 # Run browserify => Bundle widget and its dependencies into one file
