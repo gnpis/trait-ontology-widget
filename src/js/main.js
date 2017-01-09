@@ -67,22 +67,22 @@ global.CropOntologyWidget = function(selector, options) {
 		"types": {
 			"ontology": {
 				"valid_children": [ "trait", "traitClass", "variable" ],
-				"a_attr": { "class": "ontology" }
+				"a_attr": { "class": "ontology nodeLabeled" }
 			},
 			"traitClass": {
 				"valid_children": [ "trait", "variable" ],
-				"a_attr": { "class": "traitClass" }
+				"a_attr": { "class": "traitClass nodeLabeled" }
 			},
 			"trait": {
 				"valid_children": [ "variable" ],
-				"a_attr": { "class": "trait" }
+				"a_attr": { "class": "trait nodeLabeled" }
 			},
 			"variable": {
 				"valid_children": [],
-				"a_attr": { "class": "variable" }
+				"a_attr": { "class": "variable nodeLabeled" }
 			}
 		},
-		"plugins": [ "checkbox", "types" ]
+		"plugins": [ "checkbox", "types", "sort" ]
 	};
 
 	// Initialize search field if requested
@@ -101,7 +101,6 @@ global.CropOntologyWidget = function(selector, options) {
 
 	widget.$tree.on('click', '.jstree-anchor', function (event) {
 		var $target = $(event.target);
-		detailsPanel.clear();
 		var nodeId = $target.parents("li").eq(0).attr("id");
 		var node = widget.jstree.get_node(nodeId);
 		detailsPanel.display(node);

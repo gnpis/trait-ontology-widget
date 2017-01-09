@@ -1,4 +1,5 @@
 var $ = require('jquery');
+var DEFAULT_PAGINATION = { pageSize: 100, page: 0 };
 
 function joinPaths(base, extension) {
   return base.replace(/\/?$/, '') + "/" + extension.replace(/^\/?/, '') ;
@@ -15,26 +16,27 @@ function getBrapiData(brapiResponse) {
 }
 
 /**
- * Fetch all pages of a Breeding API call
+ * Asynchronously fetch all pages of a Breeding API call
  */
-function fetchAllPages(breedingAPIEndpoint, path, pageSize) {
+function fetchAllPages(breedingAPIEndpoint, path, params) {
   var url = joinPaths(breedingAPIEndpoint, path);
-  var pagination = {
-    page: 0, pageSize: pageSize
-  };
   var deferred = $.Deferred();
 
-  $.get(url, pagination).done(function(response) {
+  // override default query parameters with user given parameters
+  var query = $.extend({}, DEFAULT_PAGINATION, params);
+
+  $.get(url, query).done(function(response) {
     // results of the first page
     var firstPageData = getBrapiData(response);
     var totalPages = response.metadata.pagination.totalPages;
 
     // Prepare Ajax request for all other pages (if any)
     var requests = [];
-    while (pagination.page < totalPages - 1) {
-      pagination.page++;
-      var currentPage = $.extend({}, pagination);
-      requests.push($.get(url, currentPage));
+    while (query.page < totalPages - 1) {
+      query.page++;
+      // clone query parameters to avoid modifications
+      var currentQuery = $.extend({}, query);
+      requests.push($.get(url, currentQuery));
     }
 
     if (requests.length > 0) {
@@ -53,6 +55,7 @@ function fetchAllPages(breedingAPIEndpoint, path, pageSize) {
       deferred.resolve(firstPageData);
     }
   });
+  // Return "deferred" value (aka. "future" value)
   return deferred;
 }
 
@@ -62,13 +65,13 @@ module.exports = function BreedingAPIClient(breedingAPIEndpoint) {
   * Asynchronously load list of observation variable ontologies of a BreedingAPI endpoint
   */
   this.fetchOntologies= function() {
-    return fetchAllPages(breedingAPIEndpoint, "/ontologies", 100);
+    return fetchAllPages(breedingAPIEndpoint, "/ontologies", { pageSize: 100 });
   }
 
   /**
    * Asynchronously load list of observation variables of a BreedingAPI endpoint
    */
   this.fetchVariables = function () {
-    return fetchAllPages(breedingAPIEndpoint, "/variables", 200);
+    return fetchAllPages(breedingAPIEndpoint, "/variables", { pageSize: 200 });
   }
 }

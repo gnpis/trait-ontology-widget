@@ -22,6 +22,9 @@ function ontologyAsRootNode(ontology) {
  */
 function variableAsNodes(variable, traitClassIds, traitIds) {
   var nodes = [];
+  var baseNodeData = {
+    "ontologyName": variable["ontologyName"]
+  }
 
   var variableParent = variable.ontologyDbId;
 
@@ -41,6 +44,7 @@ function variableAsNodes(variable, traitClassIds, traitIds) {
     // If has a trait class
     var traitClass = trait.class;
     if (traitClass) {
+      traitClass = traitClass.trim();
       var traitClassId = variable.ontologyDbId + ":" + traitClass;
       traitParent = traitClassId;
 
@@ -53,7 +57,9 @@ function variableAsNodes(variable, traitClassIds, traitIds) {
           "id": traitClassId,
           "parent": variable.ontologyDbId,
           "text": traitClass,
-          "data": { "name": traitClass },
+          "data": $.extend({}, baseNodeData, {
+            "name": traitClass,
+          }),
           "type": "traitClass"
         });
       }
@@ -68,7 +74,7 @@ function variableAsNodes(variable, traitClassIds, traitIds) {
         "id": traitId,
         "parent": traitParent,
         "text": trait.name,
-        "data": trait,
+        "data": $.extend({}, baseNodeData, trait),
         "type": "trait"
       });
     }

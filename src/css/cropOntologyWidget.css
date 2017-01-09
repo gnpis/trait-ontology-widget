@@ -39,60 +39,72 @@
 	background: #F6F6F6 none repeat scroll 0% 0%;
 	border: 1px solid #DDD;
 	border-radius: 5px;
-	overflow: hidden;
+	overflow: auto;
 	max-height: 500px;
-	overflow-y: inherit;
 }
 
 .ontology-widget .details {
 	float: left;
 	width: 43%;
 	padding-left: 10px;
+	overflow: scroll;
 }
 
-.ontology-widget .details .detail {
-	margin-bottom: 15px;
-	overflow: auto;
+.ontology-widget .details th.section {
+	text-align: left;
 }
 
-.ontology-widget .details .key {
+.ontology-widget .details td.key {
 	font-weight: 700;
 	width: 120px;
 	float: left;
-	clear: left;
 	text-align: right;
 }
 
-.ontology-widget .details .value {
-	margin-left: 130px;
+.ontology-widget .details td.value {
+	padding-left: 30px;
 	word-wrap: break-word;
+  word-break: break-word;
 }
 
-/* Node type labels */
-.ontology-widget .tree a.jstree-anchor::after {
-	color: #fff;
-  font-size: 8px;
+.ontology-widget .details td.value ul {
+	margin: 0;
+	padding: 0 0 0 15px;
+}
+
+/* Type labels for tree node and details view title  */
+.ontology-widget .nodeLabeled::after {
+  color: white;
+  font-size: 9px;
   border-radius: 5px;
   padding: 2px 3px;
   font-weight: bolder;
   margin-left: 5px;
-  text-shadow: 0 -1px #333;
+  font-style: normal;
 }
-.ontology-widget .tree a.jstree-anchor.ontology::after {
+.ontology-widget .ontology::after {
   content: "ONTOLOGY";
 	background-color: #01243B;
 }
-.ontology-widget .tree a.jstree-anchor.traitClass::after {
+.ontology-widget .traitClass::after {
   content: "TRAIT CLASS";
   background-color: #336699;
 }
-.ontology-widget .tree a.jstree-anchor.trait::after {
+.ontology-widget .trait::after {
 	content: "TRAIT";
   background-color: #5288DB;
 }
-.ontology-widget .tree a.jstree-anchor.variable::after {
+.ontology-widget .variable::after {
   content: "VARIABLE";
   background-color: #71C42B;
+}
+.ontology-widget .method::after {
+  content: "METHOD";
+  background-color: #540D6E;
+}
+.ontology-widget .scale::after {
+  content: "SCALE";
+  background-color: #F39237;
 }
 
 /*
