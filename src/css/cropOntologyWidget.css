@@ -68,6 +68,33 @@
 	word-wrap: break-word;
 }
 
+/* Node type labels */
+.ontology-widget .tree a.jstree-anchor::after {
+	color: #fff;
+  font-size: 8px;
+  border-radius: 5px;
+  padding: 2px 3px;
+  font-weight: bolder;
+  margin-left: 5px;
+  text-shadow: 0 -1px #333;
+}
+.ontology-widget .tree a.jstree-anchor.ontology::after {
+  content: "ONTOLOGY";
+	background-color: #01243B;
+}
+.ontology-widget .tree a.jstree-anchor.traitClass::after {
+  content: "TRAIT CLASS";
+  background-color: #336699;
+}
+.ontology-widget .tree a.jstree-anchor.trait::after {
+	content: "TRAIT";
+  background-color: #5288DB;
+}
+.ontology-widget .tree a.jstree-anchor.variable::after {
+  content: "VARIABLE";
+  background-color: #71C42B;
+}
+
 /*
  * Import JSTree styles and inline image
  * /!\ All of the code below Requires LESS compilation (http://lesscss.org)

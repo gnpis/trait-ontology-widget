@@ -63,7 +63,26 @@ global.CropOntologyWidget = function(selector, options) {
 			"keep_selected_style": false,
 			"visible": widget.showCheckBoxes
 		},
-		"plugins": ["checkbox"]
+		// Define types of nodes
+		"types": {
+			"ontology": {
+				"valid_children": [ "trait", "traitClass", "variable" ],
+				"a_attr": { "class": "ontology" }
+			},
+			"traitClass": {
+				"valid_children": [ "trait", "variable" ],
+				"a_attr": { "class": "traitClass" }
+			},
+			"trait": {
+				"valid_children": [ "variable" ],
+				"a_attr": { "class": "trait" }
+			},
+			"variable": {
+				"valid_children": [],
+				"a_attr": { "class": "variable" }
+			}
+		},
+		"plugins": [ "checkbox", "types" ]
 	};
 
 	// Initialize search field if requested
@@ -71,24 +90,32 @@ global.CropOntologyWidget = function(selector, options) {
 	if (this.useSearchField) {
 		searchField = new SearchField(widget);
 		jsTreeOptions["search"] = {
-	    "show_only_matches": true,
-	    "search_callback": searchField.searchCallback
-	  };
-	  jsTreeOptions["plugins"].push("search");
+			"show_only_matches": true,
+			"search_callback": searchField.searchCallback
+		};
+		jsTreeOptions["plugins"].push("search");
 	}
-
-	this.$tree.jstree(jsTreeOptions);
-	this.jstree = this.$tree.jstree(true);
 
 	// Initialize details view
 	var detailsPanel = new DetailsPanel(widget);
 
-	// Update details panel on click on node
-	widget.$tree.on('activate_node.jstree', function (_, data) {
+	widget.$tree.on('click', '.jstree-anchor', function (event) {
+		var $target = $(event.target);
 		detailsPanel.clear();
-		var node = widget.jstree.get_node(data.node.id);
+		var nodeId = $target.parents("li").eq(0).attr("id");
+		var node = widget.jstree.get_node(nodeId);
 		detailsPanel.display(node);
+
+		// Update details panel on click on node (not on checkbox)
+		if (!$target.is('.jstree-checkbox')) {
+
+			//prevent node selection, just display details
+			event.stopImmediatePropagation();
+		}
 	});
+
+	this.$tree.jstree(jsTreeOptions);
+	this.jstree = this.$tree.jstree(true);
 
 	/**
 	* Show all nodes

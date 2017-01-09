@@ -11,7 +11,8 @@ function ontologyAsRootNode(ontology) {
     "id": ontology.ontologyDbId,
     "parent": "#",
     "text": ontology.ontologyName,
-    "data": ontology
+    "data": ontology,
+    "type": "ontology"
   };
 }
 
@@ -52,8 +53,8 @@ function variableAsNodes(variable, traitClassIds, traitIds) {
           "id": traitClassId,
           "parent": variable.ontologyDbId,
           "text": traitClass,
-					"state": { "opened": true },
-          "data": { "name": traitClass }
+          "data": { "name": traitClass },
+          "type": "traitClass"
         });
       }
     }
@@ -67,7 +68,8 @@ function variableAsNodes(variable, traitClassIds, traitIds) {
         "id": traitId,
         "parent": traitParent,
         "text": trait.name,
-        "data": trait
+        "data": trait,
+        "type": "trait"
       });
     }
   }
@@ -77,10 +79,17 @@ function variableAsNodes(variable, traitClassIds, traitIds) {
     "id": variable.observationVariableDbId,
     "parent": variableParent,
     "text": variableText,
-    "data": variable
+    "data": variable,
+    "type": "variable",
   });
 
   return nodes;
+}
+
+function treeReady(widget) {
+  var deferred = $.Deferred();
+  widget.$tree.on('ready.jstree', deferred.resolve);
+  return deferred;
 }
 
 module.exports = function TreeBuilder(widget, allNodeIds) {
@@ -89,6 +98,9 @@ module.exports = function TreeBuilder(widget, allNodeIds) {
   var traitClassIds = [];
   var traitIds = [];
 
+  /**
+   * Loads jstree nodes from Breeding API ontologies & varaibles
+   */
   this.buildTree = function(self, cb) {
     // Fetch all ontologies
     var ontologiesRequest = breedingAPIClient.fetchOntologies();
@@ -97,33 +109,31 @@ module.exports = function TreeBuilder(widget, allNodeIds) {
     var variablesRequest = breedingAPIClient.fetchVariables();
 
     ontologiesRequest.then(function(ontologies) {
-      var nodes = [];
+      var rootNodes = [];
 
       // Add ontology root node
       $.map(ontologies, function(ontology) {
         var ontologyRootNode = ontologyAsRootNode(ontology);
         allNodeIds.push(ontologyRootNode.id);
-        nodes.push(ontologyRootNode);
+        rootNodes.push(ontologyRootNode);
       });
 
-      // Display ontologies as root nodes
-      cb.call(self, nodes);
+      // Display root nodes (ontologies)
+      cb.call(self, rootNodes);
 
-      // Wait for jstree to be ready
-      widget.$tree.on('ready.jstree', function() {
+      // Wait for jstree to be ready & Variables to be loaded
+      $.when(treeReady(widget), variablesRequest).then(function(readyEvent, variables) {
 
         // Load variables separatly because jstree can't handle more than 1500 nodes at once
-        variablesRequest.then(function(variables) {
-          $.map(variables, function(variable) {
-            var childNodes = variableAsNodes(variable, traitClassIds, traitIds);
+        $.map(variables, function(variable) {
+          // Transform Breeding API variable into trait class, trait and variable nodes
+          var childNodes = variableAsNodes(variable, traitClassIds, traitIds);
 
-            $.map(childNodes, function(childNode) {
-              allNodeIds.push(childNode.id);
-
-              var parent = childNode.parent;
-              delete childNode.parent;
-              widget.jstree.create_node(parent, childNode);
-            });
+          // Add nodes to tree
+          $.map(childNodes, function(childNode) {
+            allNodeIds.push(childNode.id);
+            var parent = childNode.parent;
+            widget.jstree.create_node(parent, childNode);
           });
         });
       });
