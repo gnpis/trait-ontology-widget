@@ -98,14 +98,24 @@ function treeReady(widget) {
   return deferred;
 }
 
-module.exports = function TreeBuilder(widget, allNodeIds) {
+module.exports = function TreeBuilder(widget) {
   var breedingAPIClient = new BreedingAPIClient(widget.breedingAPIEndpoint)
 
   var traitClassIds = [];
   var traitIds = [];
 
+  var deferredNodeIds = $.Deferred();
+
   /**
-   * Loads jstree nodes from Breeding API ontologies & varaibles
+   * Deferred list of all node identifiers (resolved when the tree has
+   * been entirely built with `this.buildTree()`)
+   */
+  this.getAllNodeIds = function() {
+    return deferredNodeIds;
+  }
+
+  /**
+   * Asynchronously loads jstree nodes from Breeding API ontologies & varaibles
    */
   this.buildTree = function(self, cb) {
     // Fetch all ontologies
@@ -113,6 +123,9 @@ module.exports = function TreeBuilder(widget, allNodeIds) {
 
     // Fetch all variables
     var variablesRequest = breedingAPIClient.fetchVariables();
+
+    // Array aggregating all node identifiers
+    var allNodeIds = [];
 
     ontologiesRequest.then(function(ontologies) {
       var rootNodes = [];
@@ -142,6 +155,8 @@ module.exports = function TreeBuilder(widget, allNodeIds) {
             widget.jstree.create_node(parent, childNode);
           });
         });
+
+        deferredNodeIds.resolve(allNodeIds);
       });
     });
   }

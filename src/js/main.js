@@ -46,8 +46,7 @@ global.CropOntologyWidget = function(selector, options) {
   this.$tree = $('<div class="tree"></div>');
   this.$treeBox.append(this.$tree);
 
-  var allNodeIds = [];
-  var treeBuilder = new TreeBuilder(widget, allNodeIds);
+  var treeBuilder = new TreeBuilder(widget);
 
   // Base jstree options
   var jsTreeOptions = {
@@ -119,6 +118,7 @@ global.CropOntologyWidget = function(selector, options) {
         selectionHandler(event);
       });
     }
+    event.preventDefault();
   });
 
   this.$tree.jstree(jsTreeOptions);
@@ -158,33 +158,35 @@ global.CropOntologyWidget = function(selector, options) {
   * Hide all nodes except the given nodes, their parents and their children
   */
   this.showOnly = function(requiredNodeIds) {
-    var shownNodeIds = [];
-    var hiddenNodeIds = [];
-    $.map(allNodeIds, function(nodeId) {
-      if(requiredNodeIds.indexOf(nodeId) !== -1) {
-        var node = widget.jstree.get_node(nodeId);
-        shownNodeIds.push(nodeId);
-        if (node.children_d) shownNodeIds = shownNodeIds.concat(node.children_d);
-        if (node.parents) shownNodeIds = shownNodeIds.concat(node.parents);
-        if (Arrays.contains(hiddenNodeIds, nodeId)) {
-          Arrays.remove(hiddenNodeIds, nodeId);
+    treeBuilder.getAllNodeIds().then(function(allNodeIds) {
+      var shownNodeIds = [];
+      var hiddenNodeIds = [];
+      $.map(allNodeIds, function(nodeId) {
+        if(requiredNodeIds.indexOf(nodeId) !== -1) {
+          var node = widget.jstree.get_node(nodeId);
+          shownNodeIds.push(nodeId);
+          if (node.children_d) shownNodeIds = shownNodeIds.concat(node.children_d);
+          if (node.parents) shownNodeIds = shownNodeIds.concat(node.parents);
+          if (Arrays.contains(hiddenNodeIds, nodeId)) {
+            Arrays.remove(hiddenNodeIds, nodeId);
+          }
+        } else if(!Arrays.contains(shownNodeIds, nodeId)) {
+          hiddenNodeIds.push(nodeId);
         }
-      } else if(!Arrays.contains(shownNodeIds, nodeId)) {
-        hiddenNodeIds.push(nodeId);
-      }
-    })
-    // using setTimeout to delay DOM modifications (reducing UI blocking)
-    setTimeout(function() {
-      $.map(hiddenNodeIds, function(nodeId) {
-        widget.jstree.hide_node(nodeId);
-        widget.jstree.deselect_node(nodeId);
-      });
-    }, 0);
-    setTimeout(function() {
-      $.map(shownNodeIds, function(nodeId) {
-        widget.jstree.show_node(nodeId);
-      });
-    }, 0);
+      })
+      // using setTimeout to delay DOM modifications (reducing UI blocking)
+      setTimeout(function() {
+        $.map(hiddenNodeIds, function(nodeId) {
+          widget.jstree.hide_node(nodeId);
+          widget.jstree.deselect_node(nodeId);
+        });
+      }, 0);
+      setTimeout(function() {
+        $.map(shownNodeIds, function(nodeId) {
+          widget.jstree.show_node(nodeId);
+        });
+      }, 0);
+    });
   }
 
   /**
