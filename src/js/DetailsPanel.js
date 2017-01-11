@@ -37,7 +37,7 @@ function createSection(name, type) {
   return $('<tr>')
     .append(
       $('<th class="section" colspan=2>')
-        .append($('<h3 class="nodeLabeled '+type+'">').text(formatKey(name))));
+        .append($('<h3 class="labeled '+type+'">').text(formatKey(name))));
 }
 
 function createRow(key, value) {
@@ -126,7 +126,7 @@ module.exports = function DetailsPanel(widget) {
   // Display details for a node of the jstree
   this.display = function(node) {
     detailsPanel.clear();
-    $title.attr("class", node.type+" nodeLabeled");
+    $title.attr("class", node.type+" labeled");
     $title.text(node.text);
     $detailsTable.append.apply($detailsTable, createDetailView(node.data));
   }

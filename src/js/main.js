@@ -67,19 +67,19 @@ global.CropOntologyWidget = function(selector, options) {
 		"types": {
 			"ontology": {
 				"valid_children": [ "trait", "traitClass", "variable" ],
-				"a_attr": { "class": "ontology nodeLabeled" }
+				"a_attr": { "class": "ontology labeled" }
 			},
 			"traitClass": {
 				"valid_children": [ "trait", "variable" ],
-				"a_attr": { "class": "traitClass nodeLabeled" }
+				"a_attr": { "class": "traitClass labeled" }
 			},
 			"trait": {
 				"valid_children": [ "variable" ],
-				"a_attr": { "class": "trait nodeLabeled" }
+				"a_attr": { "class": "trait labeled" }
 			},
 			"variable": {
 				"valid_children": [],
-				"a_attr": { "class": "variable nodeLabeled" }
+				"a_attr": { "class": "variable labeled" }
 			}
 		},
 		"plugins": [ "checkbox", "types", "sort" ]

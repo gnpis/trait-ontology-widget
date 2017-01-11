@@ -12,7 +12,7 @@ MODULES="./node_modules"
 mkdir "${BUILD_FOLDER}"
 
 JS_FILES="./src/js/main.js"
-CSS_FILES="$(ls ./src/css/*.css)"
+LESS_FILES="$(ls ./src/less/*.less)"
 
 # Run browserify => Bundle widget and its dependencies into one file
 echo "Bundling:"
@@ -23,9 +23,9 @@ echo " ${JS_FILES} => ${DEST_FILE}.js "
 "${MODULES}/browserify/bin/cmd.js" "${JS_FILES}" -o "${DEST_FILE}.js"
 
 echo -ne "[CSS]\t"
-echo " ${CSS_FILES} => ${DEST_FILE}.css "
-#"${MODULES}/npm-css/bin/npm-css" "${CSS_FILES}" -o "${DEST_FILE}.css"
-"${MODULES}/less/bin/lessc" "${CSS_FILES}" "${DEST_FILE}.css"
+echo " ${LESS_FILES} => ${DEST_FILE}.css "
+#"${MODULES}/npm-css/bin/npm-css" "${LESS_FILES}" -o "${DEST_FILE}.css"
+"${MODULES}/less/bin/lessc" "${LESS_FILES}" "${DEST_FILE}.css"
 
 echo ""
 

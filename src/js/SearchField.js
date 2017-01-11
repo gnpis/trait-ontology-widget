@@ -4,7 +4,7 @@ module.exports = function SearchField(widget) {
   var $searchBox = $('<div class="searchBox"></div>');
   $searchBox.insertAfter(widget.$title);
 
-  var $input = $('<input placeholder="Search terms..." class="treeSearch" type="text">');
+  var $input = $('<input placeholder="Search terms..." type="text">');
   $searchBox.append($input);
 
   // Clear search input & trigger empty search
