@@ -9,7 +9,7 @@ module.exports = function SearchField(widget) {
 
   // Clear search input & trigger empty search
   this.clear = function () {
-		$input.val("").trigger("keyup");
+    $input.val("").trigger("keyup");
   }
 
   this.searchCallback = function(searchText, node) {

@@ -1,57 +1,57 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta charset="UTF-8">
-		<title>Crop Ontology Widget inclusion</title>
-		<script type="text/javascript" src="cropOntologyWidget.min.js"></script>
-		<link rel="stylesheet" href="cropOntologyWidget.min.css"></link>
-	</head>
-	<body>
-		<div id="brapiCropOntoWidget"></div>
-		<script type="text/javascript">
-		//TODO: use the URGI observation variables Breeding API WebService when updated
-		var widget = new CropOntologyWidget("#brapiCropOntoWidget", {
-			"breedingAPIEndpoint": "http://localhost:8080/ws/webresources/brapi/v1/",
-			"showCheckBoxes": true, "useSearchField": true
-		});
+  <head>
+    <meta charset="UTF-8">
+    <title>Crop Ontology Widget inclusion</title>
+    <script type="text/javascript" src="cropOntologyWidget.min.js"></script>
+    <link rel="stylesheet" href="cropOntologyWidget.min.css"></link>
+  </head>
+  <body>
+    <div id="brapiCropOntoWidget"></div>
+    <script type="text/javascript">
+    //TODO: use the URGI observation variables Breeding API WebService when updated
+    var widget = new CropOntologyWidget("#brapiCropOntoWidget", {
+      "breedingAPIEndpoint": "http://localhost:8080/ws/webresources/brapi/v1/",
+      "showCheckBoxes": true, "useSearchField": true
+    });
 
-		function getIds() {
-			var ids = widget.getSelectedNodeIds();
-			if (!ids.length) ids = "No node selected"
-			window.alert(ids);
-			console.log(ids);
-		}
-		function getLeafs() {
-			return widget.searchNodeIds(widget.jstree.get_json(), widget.jstree.is_leaf.bind(widget.jstree));
-		}
-		function showRandomLeafs() {
-			function randomLeafs(nb) {
-				var set = [];
-				var leafs = getLeafs();
-				while (set.length < nb) {
-					var elem = leafs[Math.floor(Math.random()*leafs.length)]
-					if (set.indexOf(elem) === -1) {
-						set.push(elem)
-					}
-				}
-				return set;
-			}
-			widget.showOnly(randomLeafs(300));
-		}
-		function countNotHiddenLeafs() {
-			var shown = widget.searchNodeIds(widget.jstree.get_json(), function(node) {
-				return widget.jstree.is_leaf(node) && !widget.jstree.is_hidden(node);
-			}).length;
-			var total = getLeafs().length;
-			window.alert(shown+" variables shown in widget out of "+total);
-		}
-		</script>
-		<button onclick="getIds()">Get selected node IDs</button>
-		<button onclick="widget.showAll()">Show all</button>
-		<button onclick="widget.hideAll()">Hide all</button>
-		<button onclick="widget.reset()">Reset</button>
-		<button onclick="widget.resetSelection()">Reset selection</button>
-		<button onclick="countNotHiddenLeafs()">Count displayed variables</button>
-		<button onclick="showRandomLeafs()">Show only 300 random leafs</button>
-	</body>
+    function getIds() {
+      var ids = widget.getSelectedNodeIds();
+      if (!ids.length) ids = "No node selected"
+      window.alert(ids);
+      console.log(ids);
+    }
+    function getLeafs() {
+      return widget.searchNodeIds(widget.jstree.get_json(), widget.jstree.is_leaf.bind(widget.jstree));
+    }
+    function showRandomLeafs() {
+      function randomLeafs(nb) {
+        var set = [];
+        var leafs = getLeafs();
+        while (set.length < nb) {
+          var elem = leafs[Math.floor(Math.random()*leafs.length)]
+          if (set.indexOf(elem) === -1) {
+            set.push(elem)
+          }
+        }
+        return set;
+      }
+      widget.showOnly(randomLeafs(300));
+    }
+    function countNotHiddenLeafs() {
+      var shown = widget.searchNodeIds(widget.jstree.get_json(), function(node) {
+        return widget.jstree.is_leaf(node) && !widget.jstree.is_hidden(node);
+      }).length;
+      var total = getLeafs().length;
+      window.alert(shown+" variables shown in widget out of "+total);
+    }
+    </script>
+    <button onclick="getIds()">Get selected node IDs</button>
+    <button onclick="widget.showAll()">Show all</button>
+    <button onclick="widget.hideAll()">Hide all</button>
+    <button onclick="widget.reset()">Reset</button>
+    <button onclick="widget.resetSelection()">Reset selection</button>
+    <button onclick="countNotHiddenLeafs()">Count displayed variables</button>
+    <button onclick="showRandomLeafs()">Show only 300 random leafs</button>
+  </body>
 </html>

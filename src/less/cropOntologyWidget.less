@@ -8,20 +8,20 @@
 
 // Inline required images into this file
 .jstree {
-	// Loading gif
-	& > .jstree-container-ul .jstree-loading > .jstree-ocl {
-	  background-image: data-uri('node_modules/jstree/src/themes/default/throbber.gif');
-	}
+  // Loading gif
+  & > .jstree-container-ul .jstree-loading > .jstree-ocl {
+    background-image: data-uri('node_modules/jstree/src/themes/default/throbber.gif');
+  }
 
-	// Node icons
-	.jstree-node, .jstree-icon, .jstree-file, .jstree-folder, .jstree-ok,
-	.jstree-checkbox, .jstree-er {
-		background-image: data-uri('node_modules/jstree/src/themes/default/32px.png');
-	}
+  // Node icons
+  .jstree-node, .jstree-icon, .jstree-file, .jstree-folder, .jstree-ok,
+  .jstree-checkbox, .jstree-er {
+    background-image: data-uri('node_modules/jstree/src/themes/default/32px.png');
+  }
 
-	.jstree-last {
-		background: none;
-	}
+  .jstree-last {
+    background: none;
+  }
 }
 
 /*
@@ -29,132 +29,132 @@
  */
 
 .ontology-widget {
-	width: 100%;
-	overflow: auto;
-	font: 12px helvetica, arial, freesans, clean, sans-serif;
+  width: 100%;
+  overflow: auto;
+  font: 12px helvetica, arial, freesans, clean, sans-serif;
 
-	h2 {
-		margin-top: 15px;
-		margin-bottom: 5px;
-		padding-bottom: 5px;
-		font-size: 16px;
-		color: #333;
-		border-bottom: 1px solid #DDD !important;
-	}
+  h2 {
+    margin-top: 15px;
+    margin-bottom: 5px;
+    padding-bottom: 5px;
+    font-size: 16px;
+    color: #333;
+    border-bottom: 1px solid #DDD !important;
+  }
 
-	h3 {
-		text-transform: none;
-	  margin: 0;
-	}
+  h3 {
+    text-transform: none;
+    margin: 0;
+  }
 
-	ul {
-		margin: 0;
-		padding: 0;
-		list-style: none;
+  ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
 
-		li {
-			padding: 0;
-		}
-	}
+    li {
+      padding: 0;
+    }
+  }
 
-	// Ontology tree (right panel)
-	.treeBox {
-		float: left;
-		width: 55%;
+  // Ontology tree (right panel)
+  .treeBox {
+    float: left;
+    width: 55%;
 
-		// Search box
-		.searchBox {
-			width: 100%;
-			padding: 5px;
+    // Search box
+    .searchBox {
+      width: 100%;
+      padding: 5px;
 
-			input {
-				width: 95%;
-				margin: auto;
-				border-radius: 2px;
-				border: 1px solid silver;
-				padding: 5px 5px;
-			}
-		}
+      input {
+        width: 95%;
+        margin: auto;
+        border-radius: 2px;
+        border: 1px solid silver;
+        padding: 5px 5px;
+      }
+    }
 
-		.tree {
-			position: relative;
-			background: #F6F6F6 none repeat scroll 0% 0%;
-			border: 1px solid #DDD;
-			border-radius: 5px;
-			overflow: auto;
-			max-height: 500px;
-		}
-	}
+    .tree {
+      position: relative;
+      background: #F6F6F6 none repeat scroll 0% 0%;
+      border: 1px solid #DDD;
+      border-radius: 5px;
+      overflow: auto;
+      max-height: 500px;
+    }
+  }
 
-	// Details (left panel)
-	.details {
-		float: left;
-		width: 43%;
-		padding-left: 10px;
-		overflow: scroll;
+  // Details (left panel)
+  .details {
+    float: left;
+    width: 43%;
+    padding-left: 10px;
+    overflow: scroll;
 
-		table, table * {
-			border: none;
-			line-height: 1.5em;
-		}
+    table, table * {
+      border: none;
+      line-height: 1.5em;
+    }
 
-		// Detail section header
-		th.section {
-			text-align: left;
-			padding: 15px 0 0 0;
-		}
+    // Detail section header
+    th.section {
+      text-align: left;
+      padding: 15px 0 0 0;
+    }
 
-		// Detail key
-		td.key {
-			font-weight: 700;
-			width: 120px;
-			float: left;
-			text-align: right;
-		}
+    // Detail key
+    td.key {
+      font-weight: 700;
+      width: 120px;
+      float: left;
+      text-align: right;
+    }
 
-		// Detail value
-		td.value {
-			padding-left: 30px;
-			word-wrap: break-word;
-		  word-break: break-word;
-		}
-	}
+    // Detail value
+    td.value {
+      padding-left: 30px;
+      word-wrap: break-word;
+      word-break: break-word;
+    }
+  }
 
-	// Labeled text (ontology, trait class, trait, variable, method and scale)
-	.labeled {
-		&::after {
-		  color: white;
-		  font-size: 9px;
-		  border-radius: 5px;
-		  padding: 2px 3px;
-		  font-weight: bolder;
-		  margin-left: 5px;
-		  font-style: normal;
-		}
+  // Labeled text (ontology, trait class, trait, variable, method and scale)
+  .labeled {
+    &::after {
+      color: white;
+      font-size: 9px;
+      border-radius: 5px;
+      padding: 2px 3px;
+      font-weight: bolder;
+      margin-left: 5px;
+      font-style: normal;
+    }
 
-		&.ontology::after {
-			content: "ONTOLOGY";
-			background-color: #01243B;
-		}
-		&.traitClass::after {
-			content: "TRAIT CLASS";
-			background-color: #336699;
-		}
-		&.trait::after {
-			content: "TRAIT";
-			background-color: #5288DB;
-		}
-		&.variable::after {
-			content: "VARIABLE";
-			background-color: #71C42B;
-		}
-		&.method::after {
-			content: "METHOD";
-			background-color: #540D6E;
-		}
-		&.scale::after {
-			content: "SCALE";
-			background-color: #F39237;
-		}
-	}
+    &.ontology::after {
+      content: "ONTOLOGY";
+      background-color: #01243B;
+    }
+    &.traitClass::after {
+      content: "TRAIT CLASS";
+      background-color: #336699;
+    }
+    &.trait::after {
+      content: "TRAIT";
+      background-color: #5288DB;
+    }
+    &.variable::after {
+      content: "VARIABLE";
+      background-color: #71C42B;
+    }
+    &.method::after {
+      content: "METHOD";
+      background-color: #540D6E;
+    }
+    &.scale::after {
+      content: "SCALE";
+      background-color: #F39237;
+    }
+  }
 }
