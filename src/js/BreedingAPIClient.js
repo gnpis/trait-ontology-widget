@@ -25,9 +25,17 @@ function fetchAllPages(breedingAPIEndpoint, path, params) {
   // override default query parameters with user given parameters
   var query = $.extend({}, DEFAULT_PAGINATION, params);
 
-  $.get(url, query).done(function(response) {
+  var req = $.get(url, query);
+
+  // Request successfull
+  req.done(function(response) {
     // results of the first page
-    var firstPageData = getBrapiData(response);
+    var firstPageData;
+    try {
+      firstPageData = getBrapiData(response);
+    } catch(error) {
+      return deferred.reject(error);
+    }
     var totalPages = response.metadata.pagination.totalPages;
 
     // Prepare Ajax request for all other pages (if any)
@@ -44,7 +52,11 @@ function fetchAllPages(breedingAPIEndpoint, path, params) {
       $.when.apply($, requests).done(function() {
         // Aggregate results of all pages (except the first)
         var otherPagesData = $.map(arguments, function(pageReponse) {
-          return getBrapiData(pageReponse[0]);
+          try {
+            return getBrapiData(pageReponse[0]);
+          } catch(error) {
+            return deferred.reject(error);
+          }
         })
 
         // concat results and resolve the deferred
@@ -55,6 +67,10 @@ function fetchAllPages(breedingAPIEndpoint, path, params) {
       deferred.resolve(firstPageData);
     }
   });
+
+  // Request failed
+  req.fail(deferred.reject);
+
   // Return "deferred" value (aka. "future" value)
   return deferred;
 }

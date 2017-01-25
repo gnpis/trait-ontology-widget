@@ -131,5 +131,13 @@ module.exports = function DetailsPanel(widget) {
     $detailsTable.append.apply($detailsTable, createDetailView(node.data));
   }
 
+  // Display error message in detail panel
+  this.displayError = function(errorMessage) {
+    detailsPanel.clear();
+    var errorCell = $("<td class='error'></td>").text(errorMessage);
+    var errorRow = $("<tr>").append(errorCell);
+    $detailsTable.append(errorRow);
+  }
+
   return this;
 };

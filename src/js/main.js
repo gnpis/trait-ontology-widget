@@ -97,6 +97,7 @@ global.CropOntologyWidget = function(selector, options) {
 
   // Initialize details view
   var detailsPanel = new DetailsPanel(widget);
+  widget.detailsPanel = detailsPanel;
 
   // Customized "click" & "selection" nodes event handling
   var customSelectionHandlers = [];
