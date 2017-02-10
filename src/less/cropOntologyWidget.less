@@ -30,8 +30,8 @@
 
 .ontology-widget {
   width: 100%;
-  overflow: auto;
-  font: 12px helvetica, arial, freesans, clean, sans-serif;
+  overflow: initial;
+  font: 12px Arial, Helvetica, freesans, clean, sans-serif;
 
   h2 {
     margin-top: 15px;
@@ -60,7 +60,7 @@
   // Ontology tree (right panel)
   .treeBox {
     float: left;
-    width: 55%;
+    width: 50%;
 
     // Search box
     .searchBox {
@@ -71,8 +71,10 @@
         width: 95%;
         margin: auto;
         border-radius: 2px;
+        background-color: white;
+        color: black;
         border: 1px solid silver;
-        padding: 5px 5px;
+        padding: 5px;
       }
     }
 
@@ -82,41 +84,61 @@
       border: 1px solid #DDD;
       border-radius: 5px;
       overflow: auto;
-      max-height: 500px;
+      height: 515px;
     }
   }
 
   // Details (left panel)
   .details {
     float: left;
-    width: 43%;
-    padding-left: 10px;
-    overflow: scroll;
+    width: 50%;
 
-    table, table * {
+    table {
       border: none;
       line-height: 1.5em;
+      border-collapse: separate;
+      border-spacing: 0 5px;
+
+      td, th {
+        border: none;
+        padding: 0 0 0 10px;
+      }
     }
 
     // Detail section header
-    th.section {
+    th.section h3 {
       text-align: left;
-      padding: 15px 0 0 0;
+      padding-top: 7px;
+      padding-bottom: 0px;
+      margin: 0 !important;
     }
 
     // Detail key
     td.key {
       font-weight: 700;
-      width: 120px;
+      width: 110px;
       float: left;
+      vertical-align: top;
       text-align: right;
     }
 
     // Detail value
     td.value {
-      padding-left: 30px;
+      vertical-align: top;
+      text-align: left;
+      padding-left: 20px;
+
+      /* These are technically the same, but use both */
+      overflow-wrap: break-word;
       word-wrap: break-word;
-      word-break: break-word;
+
+      a {
+        display: inline-block;
+        max-width: 170px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
     }
 
     // Error message
