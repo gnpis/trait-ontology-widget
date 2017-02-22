@@ -168,18 +168,17 @@ global.CropOntologyWidget = function(selector, options) {
           shownNodeIds.push(nodeId);
           if (node.children_d) shownNodeIds = shownNodeIds.concat(node.children_d);
           if (node.parents) shownNodeIds = shownNodeIds.concat(node.parents);
-          if (Arrays.contains(hiddenNodeIds, nodeId)) {
-            Arrays.remove(hiddenNodeIds, nodeId);
-          }
-        } else if(!Arrays.contains(shownNodeIds, nodeId)) {
+        } else {
           hiddenNodeIds.push(nodeId);
         }
-      })
+      });
       // using setTimeout to delay DOM modifications (reducing UI blocking)
       setTimeout(function() {
         $.map(hiddenNodeIds, function(nodeId) {
-          widget.jstree.hide_node(nodeId);
-          widget.jstree.deselect_node(nodeId);
+          if(!Arrays.contains(shownNodeIds, nodeId)) {
+            widget.jstree.hide_node(nodeId);
+            widget.jstree.deselect_node(nodeId);
+          }
         });
       }, 0);
       setTimeout(function() {
