@@ -2,49 +2,59 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <title>Crop Ontology Widget inclusion</title>
-    <script type="text/javascript" src="cropOntologyWidget.min.js"></script>
-    <link rel="stylesheet" href="cropOntologyWidget.min.css"></link>
+    <title>Crop Ontology Widget demo</title>
+
+    <!-- The widget javascript (use cropOntologyWidget.min.js in production)-->
+    <script type="text/javascript" src="cropOntologyWidget.js"></script>
+
+    <!-- The widget css stylesheet (use cropOntologyWidget.min.css in production)-->
+    <link rel="stylesheet" href="cropOntologyWidget.css"></link>
   </head>
   <body>
-    <div id="brapiCropOntoWidget"></div>
-    <script type="text/javascript">
-    //TODO: use the URGI observation variables Breeding API WebService when updated
-    var widget = new CropOntologyWidget("#brapiCropOntoWidget", {
-      "breedingAPIEndpoint": "http://localhost:8080/ws/webresources/brapi/v1/",
-      "showCheckBoxes": true, "useSearchField": true
-    });
+    <!-- The target DIV in which the widget is added -->
+    <div id="trait-ontology-widget"></div>
 
-    function getIds() {
-      var ids = widget.getSelectedNodeIds();
-      if (!ids.length) ids = "No node selected"
-      window.alert(ids);
-      console.log(ids);
-    }
-    function getLeafs() {
-      return widget.searchNodeIds(widget.jstree.get_json(), widget.jstree.is_leaf.bind(widget.jstree));
-    }
-    function showRandomLeafs() {
-      function randomLeafs(nb) {
-        var set = [];
-        var leafs = getLeafs();
-        while (set.length < nb) {
-          var elem = leafs[Math.floor(Math.random()*leafs.length)]
-          if (set.indexOf(elem) === -1) {
-            set.push(elem)
-          }
-        }
-        return set;
+    <script type="text/javascript">
+      // Instanciate widget
+      var widget = new CropOntologyWidget("#trait-ontology-widget", {
+        // Breeding API server
+        "breedingAPIEndpoint": "https://urgi.versailles.inra.fr/ws/webresources/brapi/v1/",
+        // options
+        "showCheckBoxes": true, "useSearchField": true
+      });
+
+      /* Some example of interactions with the widget : */
+
+      function getIds() {
+        var ids = widget.getSelectedNodeIds();
+        if (!ids.length) ids = "No node selected"
+        window.alert(ids);
+        console.log(ids);
       }
-      widget.showOnly(randomLeafs(300));
-    }
-    function countNotHiddenLeafs() {
-      var shown = widget.searchNodeIds(widget.jstree.get_json(), function(node) {
-        return widget.jstree.is_leaf(node) && !widget.jstree.is_hidden(node);
-      }).length;
-      var total = getLeafs().length;
-      window.alert(shown+" variables shown in widget out of "+total);
-    }
+      function getLeafs() {
+        return widget.searchNodeIds(widget.jstree.get_json(), widget.jstree.is_leaf.bind(widget.jstree));
+      }
+      function showRandomLeafs() {
+        function randomLeafs(nb) {
+          var set = [];
+          var leafs = getLeafs();
+          while (set.length < nb) {
+            var elem = leafs[Math.floor(Math.random()*leafs.length)]
+            if (set.indexOf(elem) === -1) {
+              set.push(elem)
+            }
+          }
+          return set;
+        }
+        widget.showOnly(randomLeafs(300));
+      }
+      function countNotHiddenLeafs() {
+        var shown = widget.searchNodeIds(widget.jstree.get_json(), function(node) {
+          return widget.jstree.is_leaf(node) && !widget.jstree.is_hidden(node);
+        }).length;
+        var total = getLeafs().length;
+        window.alert(shown+" variables shown in widget out of "+total);
+      }
     </script>
     <button onclick="getIds()">Get selected node IDs</button>
     <button onclick="widget.showAll()">Show all</button>
