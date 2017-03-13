@@ -23,6 +23,7 @@ function ontologyAsRootNode(ontology) {
 function variableAsNodes(variable, ontologyDbIds, traitClassIds, traitIds) {
   var nodes = [];
   var baseNodeData = {
+    "ontologyDbId": variable["ontologyDbId"],
     "ontologyName": variable["ontologyName"]
   }
 
@@ -32,10 +33,7 @@ function variableAsNodes(variable, ontologyDbIds, traitClassIds, traitIds) {
     ontologyDbIds.push(ontologyDbId);
 
     // Add ontology node
-    nodes.push(ontologyAsRootNode({
-      "ontologyDbId": ontologyDbId,
-      "ontologyName": variable.ontologyName
-    }));
+    nodes.push(ontologyAsRootNode(baseNodeData));
   }
 
   var variableParent = ontologyDbId;

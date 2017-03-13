@@ -103,9 +103,8 @@ global.CropOntologyWidget = function(selector, options) {
   var customSelectionHandlers = [];
   widget.$tree.on('click', '.jstree-anchor', function (event) {
     var $target = $(event.target);
-    var nodeId = $target.parents("li").eq(0).attr("id");
-    var node = widget.jstree.get_node(nodeId);
-    detailsPanel.display(node);
+    var $targetItem = $target.parents('li').eq(0);
+    detailsPanel.displayItem($targetItem);
 
     if (!$target.is('.jstree-checkbox')) {
       // Click on node (not checkobox)
