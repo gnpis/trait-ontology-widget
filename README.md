@@ -14,7 +14,7 @@ Simple integration in existing web page:
 <div id="trait-ontology-widget"></div>
 
 <script type="text/javascript">
-// Instanciate widget
+// Create widget
 var widget = new CropOntologyWidget("#trait-ontology-widget", {
   // Breeding API server
   "breedingAPIEndpoint": "https://urgi.versailles.inra.fr/ws/webresources/brapi/v1/"
@@ -41,11 +41,13 @@ The latest release of this widget is accessible on the [:link: Ephesis ontology 
 1. Clone the repository
 2. Install [Node.js](https://nodejs.org/)
 3. Fetch dependencies:
+
   ```shell
   $ npm install
   # produces a node_modules/ folder
   ```
 4. Build & run the demo:
+
   ```shell
   $ ./run.sh
   # build & run a static HTTP server
