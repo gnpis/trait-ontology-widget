@@ -20,7 +20,8 @@ DEST_FILE="${BUILD_FOLDER}/cropOntologyWidget"
 
 echo -ne "[JS]\t"
 echo " ${JS_FILES} => ${DEST_FILE}.js "
-"${MODULES}/browserify/bin/cmd.js" "${JS_FILES}" -o "${DEST_FILE}.js"
+"${MODULES}/browserify/bin/cmd.js" "${JS_FILES}" --debug -o "${DEST_FILE}.js"
+# the '--debug' option adds source mapping for easier debugging in web inspector
 
 echo -ne "[CSS]\t"
 echo " ${LESS_FILES} => ${DEST_FILE}.css "
