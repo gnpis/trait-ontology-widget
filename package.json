@@ -1,16 +1,16 @@
 {
   "name": "trait-ontology-widget",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "",
   "author": "C. Pommier, R. Florès, G. Cornut",
   "license": "BSD-3-Clause",
-  "homepage": "https://github.com/cpommier/trait-ontology-widget#readme",
+  "homepage": "https://github.com/gnpis/trait-ontology-widget#readme",
   "bugs": {
-    "url": "https://github.com/cpommier/trait-ontology-widget/issues"
+    "url": "https://github.com/gnpis/trait-ontology-widget/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/cpommier/trait-ontology-widget.git"
+    "url": "git+https://github.com/gnpis/trait-ontology-widget.git"
   },
   "scripts": {},
   "dependencies": {
