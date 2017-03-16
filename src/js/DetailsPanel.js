@@ -26,7 +26,7 @@ function isDisplayable(obj) {
     // Valid number
     if (typeof obj === "number" && obj !== NaN) return true;
     // Not empty array of displayable values
-    if ($.isArray(obj) && obj.length > 1) {
+    if ($.isArray(obj) && obj.length >= 1) {
       var ok = true;
       $.each(obj, function(element) {
         return ok = ok && isDisplayable(element);
@@ -74,7 +74,7 @@ function createRow(key, value) {
 
 // Create html to display string, array of string, etc.
 function createValueView(value) {
-  if ($.isArray(value) && value.length > 1) {
+  if ($.isArray(value) && value.length >= 1) {
     // Display list of values
     var $ul = $('<ul>');
     // Append values as unordered list (ul) of list item (li)

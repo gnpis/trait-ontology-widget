@@ -22,6 +22,13 @@ function ontologyAsRootNode(ontology) {
  */
 function variableAsNodes(variable, ontologyDbIds, traitClassIds, traitIds) {
   var nodes = [];
+
+  // Skip variables that are not in english (null values are accepted)
+  // Language selection is planned (issue gnpis/trait-ontology-widget#4)
+  if (variable.language && variable.language.toUpperCase() !== "EN") {
+    return nodes;
+  }
+
   var baseNodeData = {
     "ontologyDbId": variable["ontologyDbId"],
     "ontologyName": variable["ontologyName"]
