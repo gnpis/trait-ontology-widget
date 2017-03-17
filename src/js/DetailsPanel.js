@@ -180,7 +180,7 @@ module.exports = function DetailsPanel(widget) {
   var $title = $('<h2>'+defaultTilte+'</h2>').appendTo($details);
 
   var $detailsTable = $('<table></table>');
-  $details.append($detailsTable);
+  $details.append($('<div>').append($detailsTable));
 
   // Add to widget
   widget.$root.append($details);

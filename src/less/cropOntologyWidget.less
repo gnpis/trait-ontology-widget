@@ -43,6 +43,11 @@
     color: #333;
     border-bottom: 1px solid #DDD !important;
     padding-left: 10px;
+
+    /* These are technically the same, but use both */
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
   }
 
   h3 {
@@ -99,10 +104,14 @@
 
   // Details (left panel)
   .details {
-    float: left;
+    float: right;
     width: 50%;
-    max-height: 600px;
-    overflow-y: auto;
+
+    & > div {
+      max-height: 554px;
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
 
     table {
       border: none;
@@ -139,9 +148,12 @@
       text-align: left;
       padding-left: 20px;
 
-      /* These are technically the same, but use both */
-      overflow-wrap: break-word;
-      word-wrap: break-word;
+      * {
+        /* These are technically the same, but use both */
+        overflow-wrap: break-word;
+        word-wrap: break-word;
+        word-break: break-word;
+      }
 
       a {
         display: inline-block;
