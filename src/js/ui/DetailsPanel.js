@@ -1,5 +1,5 @@
 var $ = require('jquery');
-var Arrays = require('./utils').Arrays;
+var Arrays = require('../utils').Arrays;
 
 // List of keys that should appear on top of the detail view
 var prioritizedKeys = ["ontologyName"];
@@ -109,7 +109,6 @@ function createRows(key, value) {
 
   } else {
     // Any other keys
-
     if ($.isPlainObject(value)) {
 
       if (Arrays.contains(variableSections, key)) {
@@ -125,14 +124,12 @@ function createRows(key, value) {
           name = value[key+'DbId'];
         }
 
-        // Create new section
+        // Create new section & content
         var section = createSection(name, key);
-
-        // Create section content
         var subRows = createDetailView(value);
 
+        // Content not empty
         if (subRows && subRows.length > 0) {
-          // section content not empty
           rows.push(section);
           rows = rows.concat(subRows);
         }
@@ -182,23 +179,27 @@ module.exports = function DetailsPanel(widget) {
   var $detailsTable = $('<table></table>');
   $details.append($('<div>').append($detailsTable));
 
-  // Add to widget
-  widget.$root.append($details);
+  /**
+   * Returns the jQuery element
+   */
+  this.getElement = function() {
+    return $details;
+  }
 
-  // Clear details
+  /**
+   * Clear details
+   */
   this.clear = function() {
     $detailsTable.empty();
     $title.attr("class", "");
     $title.text(defaultTilte);
   }
 
+  /**
+   * Display details for an item (<li>) of the jstree
+   */
   var currentDisplayedItem = null;
-
-  // Display details for an item (<li>) of the jstree
-  this.displayItem = function($item) {
-    var nodeId = $item.attr('id');
-    var node = widget.jstree.get_node(nodeId);
-
+  this.displayItem = function($item, node) {
     // Clear details
     detailsPanel.clear();
 
@@ -217,7 +218,9 @@ module.exports = function DetailsPanel(widget) {
     currentDisplayedItem = $item;
   }
 
-  // Display error message in detail panel
+  /**
+   * Display error message in detail panel
+   */
   this.displayError = function(errorMessage) {
     detailsPanel.clear();
 
@@ -226,5 +229,4 @@ module.exports = function DetailsPanel(widget) {
     $detailsTable.append(errorRow);
   }
 
-  return this;
 };

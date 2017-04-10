@@ -109,12 +109,6 @@ function variableAsNodes(variable, ontologyDbIds, traitClassIds, traitIds) {
   return nodes;
 }
 
-function treeReady(widget) {
-  var deferred = $.Deferred();
-  widget.$tree.on('ready.jstree', deferred.resolve);
-  return deferred;
-}
-
 module.exports = function TreeBuilder(widget) {
   var breedingAPIClient = new BreedingAPIClient(widget.breedingAPIEndpoint)
 
@@ -135,7 +129,7 @@ module.exports = function TreeBuilder(widget) {
   /**
    * Asynchronously loads jstree nodes from Breeding API ontologies & varaibles
    */
-  this.buildTree = function(self, cb) {
+  this.buildTree = function(callback) {
     // Fetch all ontologies
     var ontologiesRequest = breedingAPIClient.fetchOntologies();
 
@@ -147,7 +141,7 @@ module.exports = function TreeBuilder(widget) {
 
     function displayVariables() {
       // Wait for jstree to be ready & Variables to be loaded
-      var ready = $.when(treeReady(widget), variablesRequest);
+      var ready = $.when(widget.jsTreePanel.treeReady(), variablesRequest);
 
       // Success
       ready.done(function(readyEvent, variables) {
@@ -159,7 +153,7 @@ module.exports = function TreeBuilder(widget) {
           $.map(childNodes, function(childNode) {
             allNodeIds.push(childNode.id);
             var parent = childNode.parent;
-            widget.jstree.create_node(parent, childNode);
+            widget.jsTreePanel.jstree.create_node(parent, childNode);
           });
         });
 
@@ -168,7 +162,7 @@ module.exports = function TreeBuilder(widget) {
 
       // Failure
       ready.fail(function() {
-        cb.call(self, []); //Load empty tree
+        callback([]); //Load empty tree
         widget.detailsPanel.displayError(
           "An error occured while contacting Breeding API endpoint: " + widget.breedingAPIEndpoint
         );
@@ -187,7 +181,7 @@ module.exports = function TreeBuilder(widget) {
       });
 
       // Display root nodes (ontologies)
-      cb.call(self, rootNodes);
+      callback(rootNodes);
 
       // Load variables separatly because jstree can't handle more than 1500 nodes at once
       displayVariables();
@@ -199,7 +193,7 @@ module.exports = function TreeBuilder(widget) {
     // Ontology list request failed (just load variables without ontology metadata)
     ontologiesRequest.fail(function() {
       // Display empty tree
-      cb.call(self, []);
+      callback([]);
       // Load variables separatly because jstree can't handle more than 1500 nodes at once
       displayVariables();
     });

@@ -2,17 +2,27 @@ var $ = require('jquery');
 
 module.exports = function SearchField(widget) {
   var $searchBox = $('<div class="searchBox"></div>');
-  $searchBox.insertAfter(widget.$title);
-
   var $input = $('<input placeholder="Search terms..." type="text">');
   $searchBox.append($input);
 
-  // Clear search input & trigger empty search
+  /**
+   * Returns the jQuery element
+   */
+  this.getElement = function() {
+    return $searchBox;
+  }
+
+  /**
+   * Clear search input & trigger empty search
+   */
   this.clear = function () {
     $input.val("").trigger("keyup");
   }
 
-  this.searchCallback = function(searchText, node) {
+  /**
+   * Predicate function returning true if the node matches the searched text
+   */
+  this.nodeMatchesText = function(searchText, node) {
     if (node.state && node.state.hidden === true) {
       return false;
     }
@@ -31,13 +41,13 @@ module.exports = function SearchField(widget) {
     return false;
   }
 
-  // Listen to the search input & search in jstree
+  // Initialize keyup event on the search input field
   var to = false;
   $input.keyup(function() {
     if (to) clearTimeout(to);
     to = setTimeout(function() {
       var v = $input.val();
-      widget.jstree.search(v);
+      widget.jsTreePanel.jstree.search(v);
     }, 250);
   });
 }

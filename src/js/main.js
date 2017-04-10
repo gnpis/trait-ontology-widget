@@ -5,14 +5,11 @@
  * Using Node/NPM dependencies with browserify
  */
 
-// Require jQuery & jsTree
+// Require jQuery
 var $ = require("jquery");
-require("jstree");
 
-var Arrays = require('./utils').Arrays;
-var TreeBuilder = require('./TreeBuilder');
-var DetailsPanel = require('./DetailsPanel');
-var SearchField = require('./SearchField');
+var JSTreePanel = require('./ui/JSTreePanel');
+var DetailsPanel = require('./ui/DetailsPanel');
 
 var defaultOptions = {
   showCheckBoxes: false,
@@ -34,201 +31,73 @@ global.CropOntologyWidget = function(selector, options) {
   // Build Components
   this.$root = $(selector);
   if (this.$root.size() === 0) {
-    throw "ERROR: Cannot initialize CropOntologyWidget. Cannot find element '"+selector+"'.";
+    throw "Cannot initialize CropOntologyWidget. Cannot find element '"+selector+"'.";
   }
-
   this.$root.addClass("ontology-widget");
-  this.$treeBox = $('<div class="treeBox" ></div>').appendTo(this.$root);
 
-  this.$title = $('<h2>Traits, methods and scales</h2>');
-  this.$treeBox.append(this.$title);
+  // Initialize jsTree panel (left pane)
+  var jsTreePanel = this.jsTreePanel = new JSTreePanel(widget);
+  this.$root.append(jsTreePanel.getElement());
 
-  this.$tree = $('<div class="tree"></div>');
-  this.$treeBox.append(this.$tree);
+  // Initialize details panel (right pane)
+  var detailsPanel = this.detailsPanel = new DetailsPanel(widget);
+  this.$root.append(detailsPanel.getElement());
 
-  var treeBuilder = new TreeBuilder(widget);
+  jsTreePanel.initializeJSTree();
 
-  // Base jstree options
-  var jsTreeOptions = {
-    "core": {
-      "check_callback" : true,
-      "themes": {
-        "variant": "large", "icons": false,
-        "stripes": true, "expand_selected_onload": true
-      },
-      "data": treeBuilder.buildTree
-    },
-    "checkbox": {
-      "keep_selected_style": false,
-      "visible": widget.showCheckBoxes
-    },
-    // Define types of nodes
-    "types": {
-      "ontology": {
-        "valid_children": [ "trait", "traitClass", "variable" ],
-        "a_attr": { "class": "ontology labeled" }
-      },
-      "traitClass": {
-        "valid_children": [ "trait", "variable" ],
-        "a_attr": { "class": "traitClass labeled" }
-      },
-      "trait": {
-        "valid_children": [ "variable" ],
-        "a_attr": { "class": "trait labeled" }
-      },
-      "variable": {
-        "valid_children": [],
-        "a_attr": { "class": "variable labeled" }
-      }
-    },
-    "plugins": [ "checkbox", "types", "sort" ]
-  };
-
-  // Initialize search field if requested
-  var searchField;
-  if (this.useSearchField) {
-    searchField = new SearchField(widget);
-    jsTreeOptions["search"] = {
-      "show_only_matches": true,
-      "search_callback": searchField.searchCallback
-    };
-    jsTreeOptions["plugins"].push("search");
-  }
-
-  // Initialize details view
-  var detailsPanel = new DetailsPanel(widget);
-  widget.detailsPanel = detailsPanel;
-
-  // Customized "click" & "selection" nodes event handling
-  var customSelectionHandlers = [];
-  widget.$tree.on('click', '.jstree-anchor', function (event) {
-    var $target = $(event.target);
-    var $targetItem = $target.parents('li').eq(0);
-    detailsPanel.displayItem($targetItem);
-
-    if (!$target.is('.jstree-checkbox')) {
-      // Click on node (not checkobox)
-
-      //prevent node selection, just display details
-      event.stopImmediatePropagation();
-    } else {
-      // Click on checkbox => selection handling
-
-      $.map(customSelectionHandlers, function(selectionHandler) {
-        selectionHandler(event);
-      });
-    }
-    event.preventDefault();
+  // Display details on click
+  jsTreePanel.addClickHandler(function($targetElement, targetNode) {
+    detailsPanel.displayItem($targetElement, targetNode);
   });
 
-  this.$tree.jstree(jsTreeOptions);
-  this.jstree = this.$tree.jstree(true);
+  // Methods below
 
   /**
   * Show all nodes
   */
-  this.showAll = function () {
-    widget.jstree.show_all();
-  }
+  this.showAll = jsTreePanel.showAll;
 
   /**
    * Hide all nodes
    */
-  this.hideAll = function () {
-    widget.jstree.hide_all();
-  }
+  this.hideAll = jsTreePanel.hideAll;
 
   /**
    * Search node identifiers using a predicate on nodes
    */
-  this.searchNodeIds = function(nodes, predicate) {
-    var filtered = [];
-    $.map(nodes, function(node) {
-      if (predicate(node)) {
-        filtered.push(node.id);
-      }
-      if (node.children) {
-        filtered = filtered.concat(widget.searchNodeIds(node.children, predicate));
-      }
-    });
-    return filtered;
-  }
+  this.searchNodeIds = jsTreePanel.searchNodeIds;
 
   /**
   * Hide all nodes except the given nodes, their parents and their children
   */
-  this.showOnly = function(requiredNodeIds) {
-    treeBuilder.getAllNodeIds().then(function(allNodeIds) {
-      var shownNodeIds = [];
-      var hiddenNodeIds = [];
-      $.map(allNodeIds, function(nodeId) {
-        if(requiredNodeIds.indexOf(nodeId) !== -1) {
-          var node = widget.jstree.get_node(nodeId);
-          shownNodeIds.push(nodeId);
-          if (node.children_d) shownNodeIds = shownNodeIds.concat(node.children_d);
-          if (node.parents) shownNodeIds = shownNodeIds.concat(node.parents);
-        } else {
-          hiddenNodeIds.push(nodeId);
-        }
-      });
-      // using setTimeout to delay DOM modifications (reducing UI blocking)
-      setTimeout(function() {
-        $.map(hiddenNodeIds, function(nodeId) {
-          if(!Arrays.contains(shownNodeIds, nodeId)) {
-            widget.jstree.hide_node(nodeId);
-            widget.jstree.deselect_node(nodeId);
-          }
-        });
-      }, 0);
-      setTimeout(function() {
-        $.map(shownNodeIds, function(nodeId) {
-          widget.jstree.show_node(nodeId);
-        });
-      }, 0);
-    });
-  }
+  this.showOnly = jsTreePanel.showOnly;
 
   /**
    * Add a node selection change handler function
    */
-  this.addSelectionChangeHandler = function(handler) {
-    customSelectionHandlers.push(handler);
-  }
+  this.addSelectionChangeHandler = jsTreePanel.addSelectionChangeHandler;
 
   /**
    * Get identifiers of selected nodes
    */
-  this.getSelectedNodeIds = function() {
-    return widget.jstree.get_selected();
-  }
+  this.getSelectedNodeIds = jsTreePanel.getSelectedNodeIds;
 
   /**
    * Get identifiers of selected leaf nodes
    */
-  this.getSelectedLeafIds = function() {
-    return $.grep(widget.getSelectedNodeIds(), function(id) {
-      var node = widget.jstree.get_node(id);
-      return (!node.children.length && node.state.selected);
-    });
-  }
+  this.getSelectedLeafIds = jsTreePanel.getSelectedLeafIds;
 
   /**
-   * Reset node selection
+   * Reset node checkbox selection
    */
-  this.resetSelection = function() {
-    widget.jstree.deselect_all();
-  }
+  this.resetSelection = jsTreePanel.resetSelection;
 
   /**
    * Reset the widget (reset details panel, search field, node selection, opened nodes)
    */
   this.reset = function() {
     detailsPanel.clear();
-    if (searchField) searchField.clear();
-    widget.resetSelection();
-    widget.showAll();
-    widget.jstree.close_all();
+    jsTreePanel.reset();
   }
 
-  return this;
 }

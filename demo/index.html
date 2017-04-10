@@ -24,36 +24,11 @@
       });
 
       /* Some example of interactions with the widget : */
-
       function getIds() {
         var ids = widget.getSelectedNodeIds();
         if (!ids.length) ids = "No node selected"
         window.alert(ids);
         console.log(ids);
-      }
-      function getLeafs() {
-        return widget.searchNodeIds(widget.jstree.get_json(), widget.jstree.is_leaf.bind(widget.jstree));
-      }
-      function showRandomLeafs() {
-        function randomLeafs(nb) {
-          var set = [];
-          var leafs = getLeafs();
-          while (set.length < nb) {
-            var elem = leafs[Math.floor(Math.random()*leafs.length)]
-            if (set.indexOf(elem) === -1) {
-              set.push(elem)
-            }
-          }
-          return set;
-        }
-        widget.showOnly(randomLeafs(300));
-      }
-      function countNotHiddenLeafs() {
-        var shown = widget.searchNodeIds(widget.jstree.get_json(), function(node) {
-          return widget.jstree.is_leaf(node) && !widget.jstree.is_hidden(node);
-        }).length;
-        var total = getLeafs().length;
-        window.alert(shown+" variables shown in widget out of "+total);
       }
     </script>
     <button onclick="getIds()">Get selected node IDs</button>
@@ -61,7 +36,5 @@
     <button onclick="widget.hideAll()">Hide all</button>
     <button onclick="widget.reset()">Reset</button>
     <button onclick="widget.resetSelection()">Reset selection</button>
-    <button onclick="countNotHiddenLeafs()">Count displayed variables</button>
-    <button onclick="showRandomLeafs()">Show only 300 random leafs</button>
   </body>
 </html>
