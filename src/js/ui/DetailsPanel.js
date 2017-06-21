@@ -170,7 +170,7 @@ function createDetailView(nodeData) {
 }
 
 // Details panel view
-module.exports = function DetailsPanel(widget) {
+module.exports = function DetailsPanel() {
   var detailsPanel = this;
   var $details = $('<div class="details"></div>');
   var defaultTilte = "Details";

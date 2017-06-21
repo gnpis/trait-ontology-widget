@@ -28,27 +28,15 @@ global.CropOntologyWidget = function(selector, options) {
     throw "Cannot initialize CropOntologyWidget. Missing parameter 'breedingAPIEndpoint'.";
   }
 
-  // Build Components
-  this.$root = $(selector);
-  if (this.$root.size() === 0) {
-    throw "Cannot initialize CropOntologyWidget. Cannot find element '"+selector+"'.";
-  }
-  this.$root.addClass("ontology-widget");
+  // Initialize details panel (right pane)
+  var detailsPanel = this.detailsPanel = new DetailsPanel();
 
   // Initialize jsTree panel (left pane)
   var jsTreePanel = this.jsTreePanel = new JSTreePanel(widget);
-  this.$root.append(jsTreePanel.getElement());
-
-  // Initialize details panel (right pane)
-  var detailsPanel = this.detailsPanel = new DetailsPanel(widget);
-  this.$root.append(detailsPanel.getElement());
-
   jsTreePanel.initializeJSTree();
 
   // Display details on click
-  jsTreePanel.addClickHandler(function($targetElement, targetNode) {
-    detailsPanel.displayItem($targetElement, targetNode);
-  });
+  jsTreePanel.addClickHandler(detailsPanel.displayItem);
 
   // Methods below
 
@@ -100,4 +88,16 @@ global.CropOntologyWidget = function(selector, options) {
     jsTreePanel.reset();
   }
 
+  // Attach components on the DOM when ready
+  $(global.document).ready(function() {
+      var $root = widget.$root = $(selector);
+      if ($root.size() === 0) {
+        throw "Cannot initialize CropOntologyWidget. Cannot find element '" + selector + "'.";
+      }
+      $root.addClass("ontology-widget");
+      $root.append(jsTreePanel.getElement());
+      $root.append(detailsPanel.getElement());
+  });
+
+  return this;
 }
