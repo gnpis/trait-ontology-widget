@@ -111,6 +111,6 @@ module.exports = function BreedingAPIClient(breedingAPIEndpoint) {
    * Asynchronously load list of observation variables of a BreedingAPI endpoint
    */
   this.fetchVariables = function () {
-    return fetchAllPages(breedingAPIEndpoint, "/variables", { pageSize: 2000 });
+    return fetchAllPages(breedingAPIEndpoint, "/variables", { pageSize: 200 });
   }
 }
