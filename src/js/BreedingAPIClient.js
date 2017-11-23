@@ -25,7 +25,7 @@ function whenAll(deferreds) {
     res.resolve();
   } else if (deferreds.length == 1) {
     deferreds[0].done(function(response) {
-      res.resolve(response[1]);
+      res.resolve([[response]]);
     });
     deferreds[0].fail(res.reject);
   } else {
@@ -70,7 +70,7 @@ function fetchAllPages(breedingAPIEndpoint, path, params) {
       requests.push($.get(url, currentQuery));
     }
 
-    if (requests.length > 1) {
+    if (requests.length >= 1) {
       // Executing all page requests asynchronously
       whenAll(requests).done(function(responses) {
         // Aggregate results of all pages (except the first)
