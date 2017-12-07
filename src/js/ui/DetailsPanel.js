@@ -200,6 +200,7 @@ module.exports = function DetailsPanel() {
    */
   var currentDisplayedItem = null;
   this.displayItem = function($item, node) {
+
     // Clear details
     detailsPanel.clear();
 
@@ -211,12 +212,16 @@ module.exports = function DetailsPanel() {
     $detailsTable.append.apply($detailsTable, createDetailView(node.data));
 
     // Update style to indicate the item that is being displayed in the detail view
+
     if (currentDisplayedItem != null) {
       currentDisplayedItem.removeClass("displayed");
     }
-    $item.addClass("displayed");
-    currentDisplayedItem = $item;
-  }
+
+    if ($item != null) {
+      $item.addClass("displayed");
+      currentDisplayedItem = $item;
+    }
+}
 
   /**
    * Display error message in detail panel
@@ -227,6 +232,17 @@ module.exports = function DetailsPanel() {
     var errorCell = $("<td class='error'></td>").text(errorMessage);
     var errorRow = $("<tr>").append(errorCell);
     $detailsTable.append(errorRow);
+  }
+
+  /**
+   * Display info message in detail panel
+   */
+  this.displayInfo = function(message) {
+    detailsPanel.clear();
+
+    var cell = $("<td class='info'></td>").text(message);
+    var row = $("<tr>").append(cell);
+    $detailsTable.append(row);
   }
 
 };
