@@ -22,7 +22,7 @@
     "clean-css": "~3.4.10",
     "http-server": "^0.8.5",
     "less": "^2.7.2",
-    "uglifyjs": "~2.4.10"
+    "uglify-js": "^3.2.1"
   },
   "main": "",
   "keywords": [

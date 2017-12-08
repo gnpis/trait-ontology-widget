@@ -246,4 +246,9 @@ module.exports = function JSTreePanel (widget) {
     });
   }
 
+  /**
+   * Get deferred list of node ids
+   */
+  this.getAllNodeIds = treeBuilder.getAllNodeIds;
+
 };
