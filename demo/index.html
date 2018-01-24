@@ -11,30 +11,70 @@
     <link rel="stylesheet" href="cropOntologyWidget.css"></link>
   </head>
   <body>
+
     <!-- The target DIV in which the widget is added -->
     <div id="trait-ontology-widget"></div>
 
+    <!-- Initialize widget with javascript  -->
     <script type="text/javascript">
-      // Instanciate widget
       var widget = new CropOntologyWidget("#trait-ontology-widget", {
         // Breeding API server
         "breedingAPIEndpoint": "https://urgi.versailles.inra.fr/ws/webresources/brapi/v1/",
         // options
         "showCheckBoxes": true, "useSearchField": true
       });
-
-      /* Some example of interactions with the widget : */
-      function getIds() {
-        var ids = widget.getSelectedNodeIds();
-        if (!ids.length) ids = "No node selected"
-        window.alert(ids);
-        console.log(ids);
-      }
     </script>
+
+    <!-- Example JS interactions with the widget -->
     <button onclick="getIds()">Get selected node IDs</button>
     <button onclick="widget.showAll()">Show all</button>
     <button onclick="widget.hideAll()">Hide all</button>
     <button onclick="widget.reset()">Reset</button>
     <button onclick="widget.resetSelection()">Reset selection</button>
+    <button onclick="emptyOutput()">Clear output below</button>
+
+    <div id="output"></div>
+    <script type="text/javascript">
+      var output = document.getElementById("output");
+      function emptyOutput() {
+        output.querySelectorAll("div").forEach(function(element) {
+	  element.remove();
+	});
+      }
+      function logOutput(action, message) {
+        var div = document.createElement('div');
+        var spanAction = document.createElement('span');
+        spanAction.textContent = action;
+        div.append(spanAction);
+        var spanMessage = document.createElement('span');
+        spanMessage.textContent = message;
+        div.append(spanMessage);
+        output.prepend(div);
+      }
+
+      function getIds() {
+        var ids = widget.getSelectedNodeIds();
+        if (!ids.length) ids = "No node selected";
+	logOutput("Get selected leaf node ids:", ids.join(", "));
+      }
+
+      // Display selection change
+      widget.addSelectionChangeHandler(function(el, node) {
+        logOutput("Node selection:", node.id);
+	getIds();
+      });
+    </script>
+    <style>
+      #output > div {
+        color: gray;
+      }
+      #output > div:first-child {
+        color: black;
+      }
+      #output > div > span:first-child {
+        font-weight: bold;
+        margin-right: 10px;
+      }
+    </style>
   </body>
 </html>

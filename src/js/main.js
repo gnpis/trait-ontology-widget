@@ -92,7 +92,7 @@ global.CropOntologyWidget = function(selector, options) {
   $(global.document).ready(function() {
 
     var $root = widget.$root = $(selector);
-    if ($root.size() === 0) {
+    if ($root.length === 0) {
       throw "Cannot initialize CropOntologyWidget. Cannot find element '" + selector + "'.";
     }
     $root.addClass("ontology-widget");
