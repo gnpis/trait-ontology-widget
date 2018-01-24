@@ -28,17 +28,11 @@ The Breeding API used in this widget **must implement** the [observation variabl
 
 ### In Ephesis ontology portal
 
-The latest release of this widget is accessible on the [:link: Ephesis ontology portal](https://urgi.versailles.inra.fr/ephesis/ephesis/ontologyportal.do).
-
-### From release
-
-1. Download the latest `distrib-wit-demo.zip` on the [release page ](https://github.com/gnpis/trait-ontology-widget/releases).
-2. Run a static HTTP server in the extracted folder (required for Ajax loading)
-3. Open the web page in the browser
+The latest release of this widget is accessible on the [:link: Ephesis ontology portal](https://urgi.versailles.inra.fr/ephesis/ephesis/ontologyportal.do) or on the [:link: Ephesis search form](https://urgi.versailles.inra.fr/ephesis/ephesis/viewer.do#showForm).
 
 ### From source code
 
-1. Clone the repository
+1. Clone the repository or download a [release archive](/releases)
 2. Install [Node.js](https://nodejs.org/)
 3. Fetch dependencies:
 

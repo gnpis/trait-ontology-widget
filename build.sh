@@ -1,6 +1,6 @@
 #!/bin/bash
 
-BUILD_FOLDER="./build"
+BUILD_FOLDER="./dist"
 MODULES="./node_modules"
 
 [ -d "$MODULES" ] || {

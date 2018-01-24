@@ -46,5 +46,5 @@ deployLocal.sh
 
 demo/data/private/
 
-build/
+dist/index.html
 node_modules/
