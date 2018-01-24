@@ -107,7 +107,9 @@ module.exports = function JSTreePanel (widget) {
         // Click on checkbox => selection handling
 
         $.map(customSelectionHandlers, function(selectionHandler) {
-          selectionHandler($targetItem, targetNode);
+          setTimeout(function() {
+            selectionHandler($targetItem, targetNode);
+          }, 0);
         });
       }
       event.preventDefault();
