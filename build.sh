@@ -1,6 +1,6 @@
 #!/bin/bash
 
-BUILD_FOLDER="./build"
+BUILD_FOLDER="./dist"
 MODULES="./node_modules"
 
 [ -d "$MODULES" ] || {
@@ -36,7 +36,7 @@ DEST_MIN_FILE="${BUILD_FOLDER}/cropOntologyWidget.min"
 
 echo -ne "[JS]\t"
 echo " ${DEST_FILE}.js => ${DEST_MIN_FILE}.js "
-"${MODULES}/uglifyjs/bin/uglifyjs" "${DEST_FILE}.js" -o "${DEST_MIN_FILE}.js"
+"${MODULES}/uglify-js/bin/uglifyjs" "${DEST_FILE}.js" -o "${DEST_MIN_FILE}.js"
 
 echo -ne "[CSS]\t"
 echo " ${DEST_FILE}.css => ${DEST_MIN_FILE}.css "

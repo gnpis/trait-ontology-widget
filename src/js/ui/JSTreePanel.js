@@ -107,7 +107,9 @@ module.exports = function JSTreePanel (widget) {
         // Click on checkbox => selection handling
 
         $.map(customSelectionHandlers, function(selectionHandler) {
-          selectionHandler($targetItem, targetNode);
+          setTimeout(function() {
+            selectionHandler($targetItem, targetNode);
+          }, 0);
         });
       }
       event.preventDefault();
@@ -245,5 +247,10 @@ module.exports = function JSTreePanel (widget) {
       return (!node.children.length && node.state.selected);
     });
   }
+
+  /**
+   * Get deferred list of node ids
+   */
+  this.getAllNodeIds = treeBuilder.getAllNodeIds;
 
 };

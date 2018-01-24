@@ -16,6 +16,29 @@ function getBrapiData(brapiResponse) {
 }
 
 /**
+ * Returns a $.Deferred that resolves when all the given deferreds are resolved
+ */
+function whenAll(deferreds) {
+  var res = $.Deferred();
+
+  if (!deferreds || deferreds.length == 0) {
+    res.resolve();
+  } else if (deferreds.length == 1) {
+    deferreds[0].done(function(response) {
+      res.resolve([[response]]);
+    });
+    deferreds[0].fail(res.reject);
+  } else {
+    var all = $.when.apply($, deferreds);
+    all.done(function() {
+      res.resolve(arguments);
+    });
+    all.fail(res.reject);
+  }
+  return res;
+}
+
+/**
  * Asynchronously fetch all pages of a Breeding API call
  */
 function fetchAllPages(breedingAPIEndpoint, path, params) {
@@ -47,13 +70,13 @@ function fetchAllPages(breedingAPIEndpoint, path, params) {
       requests.push($.get(url, currentQuery));
     }
 
-    if (requests.length > 0) {
+    if (requests.length >= 1) {
       // Executing all page requests asynchronously
-      $.when.apply($, requests).done(function() {
+      whenAll(requests).done(function(responses) {
         // Aggregate results of all pages (except the first)
-        var otherPagesData = $.map(arguments, function(pageReponse) {
+        var otherPagesData = $.map(responses, function(response) {
           try {
-            return getBrapiData(pageReponse[0]);
+            return getBrapiData(response[0]);
           } catch(error) {
             return deferred.reject(error);
           }

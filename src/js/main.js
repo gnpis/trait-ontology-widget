@@ -90,13 +90,37 @@ global.CropOntologyWidget = function(selector, options) {
 
   // Attach components on the DOM when ready
   $(global.document).ready(function() {
-      var $root = widget.$root = $(selector);
-      if ($root.size() === 0) {
-        throw "Cannot initialize CropOntologyWidget. Cannot find element '" + selector + "'.";
-      }
-      $root.addClass("ontology-widget");
-      $root.append(jsTreePanel.getElement());
-      $root.append(detailsPanel.getElement());
+
+    var $root = widget.$root = $(selector);
+    if ($root.length === 0) {
+      throw "Cannot initialize CropOntologyWidget. Cannot find element '" + selector + "'.";
+    }
+    $root.addClass("ontology-widget");
+    $root.append(jsTreePanel.getElement());
+    $root.append(detailsPanel.getElement());
+
+    // Split URL to get termIdentifier
+    var url = window.location.href;
+    var urlSplit = url.split('termIdentifier=');
+
+    var termID = null;
+    if (urlSplit.length > 1) {
+      termID = urlSplit[1];
+    }
+
+    if (termID != null) {
+      detailsPanel.displayInfo("Loading " + termID + " details");
+
+      jsTreePanel.getAllNodeIds().then(function() {
+        var targetNode = jsTreePanel.jstree.get_node(termID);
+        if (!targetNode) {
+          detailsPanel.displayError("Variable " + termID + " doesn't exists");
+        } else {
+          detailsPanel.displayItem(null, targetNode);
+        }
+      });
+
+    }
   });
 
   return this;
