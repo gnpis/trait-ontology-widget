@@ -232,6 +232,20 @@ module.exports = function JSTreePanel (widget) {
   }
 
   /**
+   * Set selected nodes by id
+   */
+  this.setSelectedNodeIds = function(nodeIds) {
+    jsTreePanel.resetSelection();
+    if (nodeIds && nodeIds.length) {
+      treeBuilder.getAllNodeIds().then(function() {
+        $.map(nodeIds, function(nodeId) {
+          jsTreePanel.jstree.select_node(nodeId);
+        });
+      });
+    }
+  }
+
+  /**
    * Get identifiers of selected nodes
    */
   this.getSelectedNodeIds = function() {
