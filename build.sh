@@ -36,11 +36,11 @@ DEST_MIN_FILE="${BUILD_FOLDER}/cropOntologyWidget.min"
 
 echo -ne "[JS]\t"
 echo " ${DEST_FILE}.js => ${DEST_MIN_FILE}.js "
-"${MODULES}/uglify-js/bin/uglifyjs" "${DEST_FILE}.js" -o "${DEST_MIN_FILE}.js"
+"${MODULES}/.bin/uglifyjs" "${DEST_FILE}.js" -o "${DEST_MIN_FILE}.js"
 
 echo -ne "[CSS]\t"
 echo " ${DEST_FILE}.css => ${DEST_MIN_FILE}.css "
-"${MODULES}/clean-css/bin/cleancss" "${DEST_FILE}.css" -o "${DEST_MIN_FILE}.css"
+"${MODULES}/.bin/cleancss" "${DEST_FILE}.css" -o "${DEST_MIN_FILE}.css"
 
 echo ""
 
