@@ -1,6 +1,6 @@
 {
   "name": "trait-ontology-widget",
-  "version": "2.1.0",
+  "version": "2.1.2",
   "description": "",
   "author": "C. Pommier, R. Florès, G. Cornut",
   "license": "BSD-3-Clause",
@@ -18,11 +18,11 @@
     "jstree": "^3.3.5"
   },
   "devDependencies": {
-    "browserify": "^13.0.0",
-    "clean-css": "~3.4.10",
-    "http-server": "^0.8.5",
-    "less": "^2.7.2",
-    "uglify-js": "^3.2.1"
+    "browserify": "16.2.2",
+    "clean-css-cli": "4.1.11",
+    "http-server": "0.11.1",
+    "less": "3.0.4",
+    "uglify-js": "3.4.0"
   },
   "main": "",
   "keywords": [

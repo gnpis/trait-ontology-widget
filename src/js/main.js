@@ -13,7 +13,8 @@ var DetailsPanel = require('./ui/DetailsPanel');
 
 var defaultOptions = {
   showCheckBoxes: false,
-  useSearchField: false
+  useSearchField: false,
+  createDiv: false
 }
 
 global.CropOntologyWidget = function(selector, options) {
@@ -23,6 +24,7 @@ global.CropOntologyWidget = function(selector, options) {
   // Options
   this.showCheckBoxes = options.showCheckBoxes || defaultOptions.showCheckBoxes;
   this.useSearchField = options.useSearchField || defaultOptions.useSearchField;
+  this.createDiv = options.createDiv === true || defaultOptions.createDiv;
   this.breedingAPIEndpoint = options.breedingAPIEndpoint;
   if(!this.breedingAPIEndpoint) {
     throw "Cannot initialize CropOntologyWidget. Missing parameter 'breedingAPIEndpoint'.";
@@ -71,6 +73,11 @@ global.CropOntologyWidget = function(selector, options) {
   this.getSelectedNodeIds = jsTreePanel.getSelectedNodeIds;
 
   /**
+   * Set selected nodes by identifiers
+   */
+  this.setSelectedNodeIds = jsTreePanel.setSelectedNodeIds;
+
+  /**
    * Get identifiers of selected leaf nodes
    */
   this.getSelectedLeafIds = jsTreePanel.getSelectedLeafIds;
@@ -88,16 +95,25 @@ global.CropOntologyWidget = function(selector, options) {
     jsTreePanel.reset();
   }
 
+  if (widget.createDiv) {
+    widget.$root = $('<div id="'+selector+'">');
+    widget.$root.addClass("ontology-widget");
+    widget.$root.append(jsTreePanel.getElement());
+    widget.$root.append(detailsPanel.getElement());
+  }
+
   // Attach components on the DOM when ready
   $(global.document).ready(function() {
-
-    var $root = widget.$root = $(selector);
-    if ($root.length === 0) {
-      throw "Cannot initialize CropOntologyWidget. Cannot find element '" + selector + "'.";
+    if (!widget.createDiv) {
+      widget.$root = $(selector);
+      if (widget.$root.length === 0) {
+        throw "Cannot initialize CropOntologyWidget. Cannot find element '" + selector + "'.";
+      }
+      widget.$root.addClass("ontology-widget");
+      widget.$root.append(jsTreePanel.getElement());
+      widget.$root.append(detailsPanel.getElement());
     }
-    $root.addClass("ontology-widget");
-    $root.append(jsTreePanel.getElement());
-    $root.append(detailsPanel.getElement());
+
 
     // Split URL to get termIdentifier
     var url = window.location.href;
@@ -116,6 +132,7 @@ global.CropOntologyWidget = function(selector, options) {
         if (!targetNode) {
           detailsPanel.displayError("Variable " + termID + " doesn't exists");
         } else {
+          jsTreePanel.setSelectedNodeIds([termID]);
           detailsPanel.displayItem(null, targetNode);
         }
       });

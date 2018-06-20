@@ -554,7 +554,7 @@
   overflow: hidden;
 }
 .jstree-default .jstree-ellipsis .jstree-anchor {
-  width: calc(100% - 29px);
+  width: calc(100% - 24px + 5px);
   text-overflow: ellipsis;
   overflow: hidden;
 }
@@ -738,7 +738,7 @@
   overflow: hidden;
 }
 .jstree-default-small .jstree-ellipsis .jstree-anchor {
-  width: calc(100% - 23px);
+  width: calc(100% - 18px + 5px);
   text-overflow: ellipsis;
   overflow: hidden;
 }
@@ -922,7 +922,7 @@
   overflow: hidden;
 }
 .jstree-default-large .jstree-ellipsis .jstree-anchor {
-  width: calc(100% - 37px);
+  width: calc(100% - 32px + 5px);
   text-overflow: ellipsis;
   overflow: hidden;
 }
