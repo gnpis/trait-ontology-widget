@@ -6,6 +6,12 @@
 // Import JSTree lesscss styles
 @import "node_modules/jstree/src/themes/default/style";
 
+@keyframes opactityPulse {
+    0% { opacity: 0.2; }
+    50% { opacity: 1; }
+    100% { opacity: 0.2; }
+}
+
 // Inline required images into this file
 .jstree {
   // Loading gif
@@ -118,6 +124,7 @@
       //line-height: 1.5em;
       border-collapse: separate;
       border-spacing: 0 5px;
+      width: 100%;
 
       td, th {
         border: none;
@@ -169,6 +176,13 @@
       color: red;
       text-align: center;
       font-weight: bold;
+    }
+
+    td.loading {
+      font-weight: 700;
+      font-size: 14px;
+      text-align: center;
+      animation: opactityPulse 1.5s infinite ease-in-out;
     }
   }
 
