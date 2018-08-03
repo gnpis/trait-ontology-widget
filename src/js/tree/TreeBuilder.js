@@ -30,15 +30,15 @@ export class TreeBuilder {
    */
   buildTree(callback) {
     // Fetch all ontologies
-    let ontologiesRequest = this.breedingAPIClient.fetchOntologies()
+    var ontologiesRequest = this.breedingAPIClient.fetchOntologies()
 
     // Fetch all variables
-    let variablesRequest = this.breedingAPIClient.fetchVariables()
+    var variablesRequest = this.breedingAPIClient.fetchVariables()
 
     // Ontology list request worked (load ontology & then variables)
     ontologiesRequest.done((ontologies) => {
-      let rootNodes = $.map(ontologies, (ontology) => {
-          let ontologyRootNode = this.ontologyAsRootNode(ontology)
+      var rootNodes = $.map(ontologies, (ontology) => {
+          var ontologyRootNode = this.ontologyAsRootNode(ontology)
           this.ontologyDbIds.push(ontologyRootNode.id)
           this.allNodeIds.push(ontologyRootNode.id)
           return ontologyRootNode
@@ -56,6 +56,9 @@ export class TreeBuilder {
     })
   }
 
+  /*
+   * Create and display variable nodes
+   */
   displayVariables(variablesRequest) {
     // Wait for jstree to be ready & Variables to be loaded
     var ready = $.when(this.widget.jsTreePanel.treeReady(), variablesRequest)
@@ -63,7 +66,7 @@ export class TreeBuilder {
     // Success
     ready.done((readyEvent, variables) => {
 
-      let childNodes = $.map(variables, (variable) => this.variableAsNodes(variable))
+      var childNodes = $.map(variables, (variable) => this.variableAsNodes(variable))
       // Add nodes to tree
       $.map(childNodes, (childNode) => {
         this.allNodeIds.push(childNode.id)
@@ -74,8 +77,7 @@ export class TreeBuilder {
     })
 
     // Failure
-    ready.fail(function() {
-      callback([]); //Load empty tree
+    ready.fail(() => {
       this.widget.detailsPanel.displayError(
         'An error occured while contacting Breeding API endpoint: ' +
         this.widget.breedingAPIEndpoint

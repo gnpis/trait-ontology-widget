@@ -97,23 +97,19 @@ export class JSTreePanel {
       var targetNodeId = $targetItem.attr('id')
       var targetNode = this.jstree.get_node(targetNodeId)
 
-      $.map(this.customClickHandlers, function(clickHandler) {
-        clickHandler($targetItem, targetNode)
+      // Activate all click handlers
+      $.map(this.customClickHandlers, (handler) => {
+        handler($targetItem, targetNode)
       })
 
-      if (!$target.is('.jstree-checkbox')) {
-        // Click on node (not checkbox)
-
-        //prevent node selection, just display details
-        event.stopImmediatePropagation()
-      } else {
-        // Click on checkbox => selection handling
-
-        $.map(this.customSelectionHandlers, function(selectionHandler) {
-          setTimeout(function() {
-            selectionHandler($targetItem, targetNode)
-          }, 0)
+      if ($target.is('.jstree-checkbox')) {
+        // Click on checkbox => activate all selection handlers
+        $.map(this.customSelectionHandlers, (handler) => {
+          setTimeout(() => handler($targetItem, targetNode), 0)
         })
+      } else {
+        // Not on checkbox: prevent node selection
+        event.stopImmediatePropagation()
       }
       event.preventDefault()
     })

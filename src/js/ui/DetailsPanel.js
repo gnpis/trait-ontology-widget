@@ -29,9 +29,7 @@ function isDisplayable(obj) {
     // Not empty array of displayable values
     if ($.isArray(obj) && obj.length >= 1) {
       var ok = true
-      $.each(obj, function(element) {
-        return ok = ok && isDisplayable(element)
-      })
+      $.each(obj, (element) => ok = ok && isDisplayable(element))
       return ok
     }
   }
@@ -50,7 +48,7 @@ function formatKey(str) {
       .replace(/([A-Z][a-z])/g, ' $1')
       .toLowerCase().trim()
       // uppercase first letter
-      .replace(/^./, function(str){ return str.toUpperCase(); })
+      .replace(/^./, (str) => str.toUpperCase())
   }
 }
 
@@ -78,10 +76,9 @@ function createValueView(value) {
   if ($.isArray(value) && value.length >= 1) {
     // Display list of values
     var $ul = $('<ul>')
+    var items = $.map(value, (v) => $('<li>').text(v))
     // Append values as unordered list (ul) of list item (li)
-    return $ul.append.apply($ul, $.map(value, function(v) {
-      return $('<li>').text(v)
-    }))
+    return $ul.append.apply($ul, items)
   } else if (value.match && value.match(/^https?:\/\/.+/)) {
     // Display links
     return $('<a>').text(value).attr("href", value).attr("target", "_blank")
@@ -93,10 +90,10 @@ function createValueView(value) {
 // Create list of links (for links on list of ontologies)
 function createLinks(links) {
   var $ul = $('<ul>')
+  var toLink = ({rel, href}) => $('<a>').attr("href", href).text(rel)
+  var items = $.map(links, (link) => $('<li>').append(toLink(link)))
   // Append links as unordered list (ul) of list item (li) of anchor (a)
-  return $ul.append.apply($ul, $.map(links, function(link) {
-    return $('<li>').append($('<a>').attr("href", link["href"]).text(link["rel"]))
-  }))
+  return $ul.append.apply($ul, items)
 }
 
 function createRows(key, value) {
@@ -136,9 +133,10 @@ function createRows(key, value) {
         }
       } else {
         // Display object (like scale.validValues)
-        var subRows = $.map(value, function(i, subKey) {
-          return createRows(subKey, value[subKey])
-        })
+        var subRows = $.map(
+          value,
+          (_, subKey) => createRows(subKey, value[subKey])
+        )
 
         if (subRows && subRows.length > 0) {
           rows = rows.concat(subRows)

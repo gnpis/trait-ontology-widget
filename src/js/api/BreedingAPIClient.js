@@ -20,23 +20,19 @@ function getBrapiData(brapiResponse) {
  * Returns a $.Deferred that resolves when all the given deferreds are resolved
  */
 function whenAll(deferreds) {
-  var res = $.Deferred()
+  var deferred = $.Deferred()
 
   if (!deferreds || deferreds.length == 0) {
-    res.resolve()
+    deferred.resolve()
   } else if (deferreds.length == 1) {
-    deferreds[0].done(function(response) {
-      res.resolve([[response]])
-    })
-    deferreds[0].fail(res.reject)
+    deferreds[0].done((response) => deferred.resolve([[response]]))
+    deferreds[0].fail(deferred.reject)
   } else {
     var all = $.when.apply($, deferreds)
-    all.done(function() {
-      res.resolve(arguments)
-    })
-    all.fail(res.reject)
+    all.done((...responses) => deferred.resolve(responses))
+    all.fail(deferred.reject)
   }
-  return res
+  return deferred
 }
 
 /**

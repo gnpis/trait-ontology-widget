@@ -11,7 +11,7 @@ export class SearchField {
 
     // Initialize keyup event on the search input field
     // With 250ms event throttling to prevent to much call to jstree.search
-    let searching = false
+    var searching = false
     this.$input.keyup(() => {
       if (searching) clearTimeout(searching)
       searching = setTimeout(() => {
