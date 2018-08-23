@@ -64,7 +64,12 @@ export class CropOntologyWidget {
           this.detailsPanel.displayLoading("Loading ontologies and variables...")
         }
 
+        // Loading
+        this.$root.addClass("loading");
+
         this.jsTreePanel.getAllNodeIds().then(() => {
+          // Has loaded
+          this.$root.removeClass("loading");
           if (termID) {
             var targetNode = this.jsTreePanel.jstree.get_node(termID)
             if (!targetNode) {
