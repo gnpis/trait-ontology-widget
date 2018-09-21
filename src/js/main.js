@@ -65,11 +65,11 @@ export class CropOntologyWidget {
         }
 
         // Loading
-        this.$root.addClass("loading");
+        this.$root.addClass("loading")
 
         this.jsTreePanel.getAllNodeIds().then(() => {
           // Has loaded
-          this.$root.removeClass("loading");
+          this.$root.removeClass("loading")
           if (termID) {
             var targetNode = this.jsTreePanel.jstree.get_node(termID)
             if (!targetNode) {
@@ -79,12 +79,18 @@ export class CropOntologyWidget {
               this.detailsPanel.displayItem(null, targetNode)
             }
           } else {
-            this.jsTreePanel.getAllNodeIds().then(() => this.detailsPanel.clear())
+            this.detailsPanel.clear()
           }
 
           // Display details on click
           this.jsTreePanel.addClickHandler(
             ($item, node) => this.detailsPanel.displayItem($item, node)
+          )
+        }).catch(() => {
+          this.$root.removeClass("loading")
+          this.detailsPanel.displayError(
+            'An error occured while contacting Breeding API endpoint: ' +
+            this.breedingAPIEndpoint
           )
         })
       })

@@ -77,12 +77,7 @@ export class TreeBuilder {
     })
 
     // Failure
-    ready.fail(() => {
-      this.widget.detailsPanel.displayError(
-        'An error occured while contacting Breeding API endpoint: ' +
-        this.widget.breedingAPIEndpoint
-      )
-    })
+    ready.fail(this.deferredNodeIds.reject)
   }
 
   /**
