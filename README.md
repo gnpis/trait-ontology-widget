@@ -55,6 +55,7 @@ The latest release of this widget is accessible on the [:link: Ephesis ontology 
 
 Development tools:
 * **browserify**: used to bundle the widget source with its dependencies
+* **babel**: used to compile from latest JavaScript syntax to compatible older JavaScript syntax
 * **uglifyjs**: used to minify the JavasSript after bundling
 * **less**: a CSS preprocessor used to bundle the widget styles with jstree's styles
 * **clean-css**: used to minify the CSS after bundling

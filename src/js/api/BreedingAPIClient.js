@@ -1,8 +1,9 @@
-var $ = require('jquery');
-var DEFAULT_PAGINATION = { pageSize: 100, page: 0 };
+const $ = require('jquery')
+
+const DEFAULT_PAGINATION = { pageSize: 100, page: 0 }
 
 function joinPaths(base, extension) {
-  return base.replace(/\/?$/, '') + "/" + extension.replace(/^\/?/, '') ;
+  return base.replace(/\/?$/, '') + "/" + extension.replace(/^\/?/, '')
 }
 
 /**
@@ -10,64 +11,60 @@ function joinPaths(base, extension) {
  */
 function getBrapiData(brapiResponse) {
   if (brapiResponse.metadata.status != null && brapiResponse.metadata.status.length > 0) {
-    throw brapiResponse.metadata.status;
+    throw brapiResponse.metadata.status
   }
-  return brapiResponse.result.data;
+  return brapiResponse.result.data
 }
 
 /**
  * Returns a $.Deferred that resolves when all the given deferreds are resolved
  */
 function whenAll(deferreds) {
-  var res = $.Deferred();
+  var deferred = $.Deferred()
 
   if (!deferreds || deferreds.length == 0) {
-    res.resolve();
+    deferred.resolve()
   } else if (deferreds.length == 1) {
-    deferreds[0].done(function(response) {
-      res.resolve([[response]]);
-    });
-    deferreds[0].fail(res.reject);
+    deferreds[0].done((response) => deferred.resolve([[response]]))
+    deferreds[0].fail(deferred.reject)
   } else {
-    var all = $.when.apply($, deferreds);
-    all.done(function() {
-      res.resolve(arguments);
-    });
-    all.fail(res.reject);
+    var all = $.when.apply($, deferreds)
+    all.done((...responses) => deferred.resolve(responses))
+    all.fail(deferred.reject)
   }
-  return res;
+  return deferred
 }
 
 /**
  * Asynchronously fetch all pages of a Breeding API call
  */
 function fetchAllPages(breedingAPIEndpoint, path, params) {
-  var url = joinPaths(breedingAPIEndpoint, path);
-  var deferred = $.Deferred();
+  var url = joinPaths(breedingAPIEndpoint, path)
+  var deferred = $.Deferred()
 
   // override default query parameters with user given parameters
-  var query = $.extend({}, DEFAULT_PAGINATION, params);
+  var query = $.extend({}, DEFAULT_PAGINATION, params)
 
-  var req = $.get(url, query);
+  var req = $.get(url, query)
 
   // Request successfull
   req.done(function(response) {
     // results of the first page
-    var firstPageData;
+    var firstPageData
     try {
-      firstPageData = getBrapiData(response);
+      firstPageData = getBrapiData(response)
     } catch(error) {
-      return deferred.reject(error);
+      return deferred.reject(error)
     }
-    var totalPages = response.metadata.pagination.totalPages;
+    var totalPages = response.metadata.pagination.totalPages
 
     // Prepare Ajax request for all other pages (if any)
-    var requests = [];
+    var requests = []
     while (query.page < totalPages - 1) {
-      query.page++;
+      query.page++
       // clone query parameters to avoid modifications
-      var currentQuery = $.extend({}, query);
-      requests.push($.get(url, currentQuery));
+      var currentQuery = $.extend({}, query)
+      requests.push($.get(url, currentQuery))
     }
 
     if (requests.length >= 1) {
@@ -76,41 +73,45 @@ function fetchAllPages(breedingAPIEndpoint, path, params) {
         // Aggregate results of all pages (except the first)
         var otherPagesData = $.map(responses, function(response) {
           try {
-            return getBrapiData(response[0]);
+            return getBrapiData(response[0])
           } catch(error) {
-            return deferred.reject(error);
+            return deferred.reject(error)
           }
         })
 
         // concat results and resolve the deferred
-        deferred.resolve(firstPageData.concat(otherPagesData));
+        deferred.resolve(firstPageData.concat(otherPagesData))
       })
     } else {
       // Only one page
-      deferred.resolve(firstPageData);
+      deferred.resolve(firstPageData)
     }
-  });
+  })
 
   // Request failed
-  req.fail(deferred.reject);
+  req.fail(deferred.reject)
 
   // Return "deferred" value (aka. "future" value)
-  return deferred;
+  return deferred
 }
 
+export class BreedingAPIClient {
 
-module.exports = function BreedingAPIClient(breedingAPIEndpoint) {
+  constructor(breedingAPIEndpoint) {
+    this.breedingAPIEndpoint = breedingAPIEndpoint
+  }
+
   /**
   * Asynchronously load list of observation variable ontologies of a BreedingAPI endpoint
   */
-  this.fetchOntologies= function() {
-    return fetchAllPages(breedingAPIEndpoint, "/ontologies", { pageSize: 100 });
+  fetchOntologies() {
+    return fetchAllPages(this.breedingAPIEndpoint, "/ontologies", { pageSize: 100 })
   }
 
   /**
    * Asynchronously load list of observation variables of a BreedingAPI endpoint
    */
-  this.fetchVariables = function () {
-    return fetchAllPages(breedingAPIEndpoint, "/variables", { pageSize: 200 });
+  fetchVariables() {
+    return fetchAllPages(this.breedingAPIEndpoint, "/variables", { pageSize: 200 })
   }
 }

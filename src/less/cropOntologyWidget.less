@@ -6,6 +6,14 @@
 // Import JSTree lesscss styles
 @import "node_modules/jstree/src/themes/default/style";
 
+@opacityPulseFrom : 0.25;
+@opacityPulseTo : 0.6;
+@keyframes opactityPulse {
+    0% { opacity: @opacityPulseFrom; }
+    50% { opacity: @opacityPulseTo; }
+    100% { opacity: @opacityPulseFrom; }
+}
+
 // Inline required images into this file
 .jstree {
   // Loading gif
@@ -34,6 +42,23 @@
   font: 12px Arial, Helvetica, freesans, clean, sans-serif;
   float: left;
   clear: both;
+
+  &.loading {
+    cursor: wait;
+
+    .tree {
+      pointer-events: none;
+      filter: grayscale(100%);
+      animation: opactityPulse 1.75s infinite ease-in-out;
+    }
+
+    .details td {
+        animation: opactityPulse 1.75s infinite ease-in-out;
+        font-weight: 700;
+        font-size: 16px;
+        text-align: center;
+    }
+  }
 
   h2 {
     margin-top: 15px;
@@ -170,6 +195,7 @@
       text-align: center;
       font-weight: bold;
     }
+
   }
 
   // Labeled text (ontology, trait class, trait, variable, method and scale)
