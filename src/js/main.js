@@ -6,12 +6,12 @@
  */
 
 // Require jQuery
-const $ = require("jquery")
+const $ = require('jquery')
 
-import { JSTreePanel } from './ui/JSTreePanel'
-import { DetailsPanel } from './ui/DetailsPanel'
+import JSTreePanel from './ui/JSTreePanel'
+import DetailsPanel from './ui/DetailsPanel'
 
-const defaultOptions = {
+const DEFAULT_OPTIONS = {
   showCheckBoxes: false,
   useSearchField: false,
   createDiv: false
@@ -19,35 +19,31 @@ const defaultOptions = {
 
 export class CropOntologyWidget {
     constructor(selector, options) {
-      // Options
-      this.showCheckBoxes = options.showCheckBoxes || defaultOptions.showCheckBoxes
-      this.useSearchField = options.useSearchField || defaultOptions.useSearchField
-      this.createDiv = options.createDiv === true || defaultOptions.createDiv
-      this.breedingAPIEndpoint = options.breedingAPIEndpoint
-      if(!this.breedingAPIEndpoint) {
+      // Options (overide the defaults with options given)
+      this.options = {...DEFAULT_OPTIONS, ...options}
+      if(!this.options.breedingAPIEndpoint) {
         throw "Cannot initialize CropOntologyWidget. Missing parameter 'breedingAPIEndpoint'."
       }
 
       // Initialize details panel (right pane)
-      this.detailsPanel = new DetailsPanel()
+      this.detailsPanel = new DetailsPanel(this)
 
       // Initialize jsTree panel (left pane)
       this.jsTreePanel = new JSTreePanel(this)
-      this.jsTreePanel.initializeJSTree()
 
-      if (this.createDiv) {
-        this.$root = $('<div id="'+selector+'">')
-        this.$root.addClass("ontology-widget")
+      if (this.options.createDiv) {
+        this.$root = $(`<div id="${selector}">`)
+        this.$root.addClass('ontology-widget')
         this.$root.append(this.jsTreePanel.getElement())
         this.$root.append(this.detailsPanel.getElement())
       }
 
       // Attach components on the DOM when ready
       $(global.document).ready(() => {
-        if (!this.createDiv) {
+        if (!this.options.createDiv) {
           this.$root = $(selector)
           if (this.$root.length === 0) {
-            throw "Cannot initialize CropOntologyWidget. Cannot find element '" + selector + "'."
+            throw `Cannot initialize CropOntologyWidget. Cannot find element '${selector}'.`
           }
           this.$root.addClass("ontology-widget")
           this.$root.append(this.jsTreePanel.getElement())
@@ -55,40 +51,39 @@ export class CropOntologyWidget {
         }
 
         // Split URL to get termIdentifier
-        var url = window.location.href
-        var [_, termID] = url.split('termIdentifier=')
-
-        if (termID) {
-          this.detailsPanel.displayLoading("Loading " + termID + " details...")
-        } else {
-          this.detailsPanel.displayLoading("Loading ontologies and variables...")
-        }
+        let url = window.location.href
+        let [_, termID] = url.split('termIdentifier=')
 
         // Loading
-        this.$root.addClass("loading")
+        this.$root.addClass('loading')
+        if (termID) {
+          this.detailsPanel.displayMessage('loading', `Loading ${termID} details...`)
+        } else {
+          this.detailsPanel.displayMessage('loading', 'Loading ontologies and variables...')
+        }
 
-        this.jsTreePanel.getAllNodeIds().then(() => {
-          // Has loaded
-          this.$root.removeClass("loading")
+        // Load tree
+        this.jsTreePanel.load().then(() => {
+          // Then
+          this.detailsPanel.clear()
+          this.$root.removeClass('loading')
+
           if (termID) {
-            var targetNode = this.jsTreePanel.jstree.get_node(termID)
+            let targetNode = this.jsTreePanel.jstree.get_node(termID)
             if (!targetNode) {
-              this.detailsPanel.displayError("Variable " + termID + " doesn't exists")
+              this.detailsPanel.displayMessage('error', `Variable ${termID} doesn't exists`)
             } else {
               this.jsTreePanel.setSelectedNodeIds([termID])
-              this.detailsPanel.displayItem(null, targetNode)
             }
-          } else {
-            this.detailsPanel.clear()
           }
 
           // Display details on click
           this.jsTreePanel.addClickHandler(
-            ($item, node) => this.detailsPanel.displayItem($item, node)
+            (_, node) => this.onClickNode(node)
           )
         }).catch(() => {
-          this.$root.removeClass("loading")
-          this.detailsPanel.displayError(
+          this.$root.removeClass('loading')
+          this.detailsPanel.displayMessage('error',
             'An error occured while contacting Breeding API endpoint: ' +
             this.breedingAPIEndpoint
           )
@@ -141,6 +136,39 @@ export class CropOntologyWidget {
        * Reset node checkbox selection
        */
       this.resetSelection = this.jsTreePanel.resetSelection.bind(this.jsTreePanel)
+    }
+
+    /**
+     * Set max height of the widget
+     */
+    setHeight(height) {
+      this.height = height
+
+      let $treeBox = this.jsTreePanel.$treeBox
+      let $tree = this.jsTreePanel.$tree
+      let treeHeight = height - ($tree.offset().top - $treeBox.offset().top)
+      $tree.css('height', treeHeight)
+
+      let $detailsBox = this.detailsPanel.$detailsBox
+      let $details = this.detailsPanel.$details
+      let detailsHeight = height - ($details.offset().top - $detailsBox.offset().top)
+      $details.css('max-height', detailsHeight)
+
+      if (!this.jsTreePanel.isLoaded()) {
+        this.jsTreePanel.load().then(() => {
+          this.setHeight(height)
+        })
+      }
+    }
+
+    /**
+     * Actions on tree node click
+     */
+    onClickNode(node) {
+      this.detailsPanel.displayItem(node)
+      setTimeout(() => {
+        this.jsTreePanel.onClickTreeNode(node)
+      }, 100)
     }
 
     /**

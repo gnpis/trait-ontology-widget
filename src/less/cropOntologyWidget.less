@@ -95,6 +95,17 @@
     float: left;
     width: 50%;
 
+    // Language selector
+    .languageSelector {
+      float: right;
+      color: black;
+      font-weight: normal;
+    }
+
+    .notTranslated {
+      font-style: italic;
+    }
+
     // Search box
     .searchBox {
       width: 100%;
@@ -172,6 +183,7 @@
       vertical-align: top;
       text-align: left;
       padding-left: 20px;
+      width: 100%;
 
       * {
         /* These are technically the same, but use both */
@@ -194,6 +206,14 @@
       color: red;
       text-align: center;
       font-weight: bold;
+    }
+
+    // Warning message
+    td.warning {
+      color: #F39237;
+      text-align: center;
+      font-style: italic;
+      padding-bottom: 20px;
     }
 
   }
