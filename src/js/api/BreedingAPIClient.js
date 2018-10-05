@@ -1,77 +1,77 @@
 const $ = require('jquery')
 
-const DEFAULT_PAGINATION = { pageSize: 100, page: 0 }
+import { whenAll, isEmpty } from '../utils'
+
+export default class BreedingAPIClient {
+
+  constructor(breedingAPIEndpoint) {
+    this.breedingAPIEndpoint = breedingAPIEndpoint
+  }
+
+  /**
+  * Asynchronously load list of observation variable ontologies of a BreedingAPI endpoint
+  */
+  fetchOntologies() {
+    return fetchAllPages(this.breedingAPIEndpoint, "/ontologies", { pageSize: 100 })
+  }
+
+  /**
+   * Asynchronously load list of observation variables of a BreedingAPI endpoint
+   */
+  fetchVariables() {
+    return fetchAllPages(this.breedingAPIEndpoint, "/variables", { pageSize: 200 })
+  }
+}
+
 
 function joinPaths(base, extension) {
-  return base.replace(/\/?$/, '') + "/" + extension.replace(/^\/?/, '')
+  return base.replace(/\/?$/, '') + '/' + extension.replace(/^\/?/, '')
 }
 
 /**
  * Extract data from Breeding API response or throw an error if any occured
  */
 function getBrapiData(brapiResponse) {
-  if (brapiResponse.metadata.status != null && brapiResponse.metadata.status.length > 0) {
+  if (!isEmpty(brapiResponse.metadata.status)) {
     throw brapiResponse.metadata.status
   }
   return brapiResponse.result.data
 }
 
 /**
- * Returns a $.Deferred that resolves when all the given deferreds are resolved
- */
-function whenAll(deferreds) {
-  var deferred = $.Deferred()
-
-  if (!deferreds || deferreds.length == 0) {
-    deferred.resolve()
-  } else if (deferreds.length == 1) {
-    deferreds[0].done((response) => deferred.resolve([[response]]))
-    deferreds[0].fail(deferred.reject)
-  } else {
-    var all = $.when.apply($, deferreds)
-    all.done((...responses) => deferred.resolve(responses))
-    all.fail(deferred.reject)
-  }
-  return deferred
-}
-
-/**
  * Asynchronously fetch all pages of a Breeding API call
  */
 function fetchAllPages(breedingAPIEndpoint, path, params) {
-  var url = joinPaths(breedingAPIEndpoint, path)
-  var deferred = $.Deferred()
+  let url = joinPaths(breedingAPIEndpoint, path)
+  let deferred = $.Deferred()
 
   // override default query parameters with user given parameters
-  var query = $.extend({}, DEFAULT_PAGINATION, params)
-
-  var req = $.get(url, query)
+  let page = 0
+  let req = $.get(url, {...params, page})
 
   // Request successfull
   req.done(function(response) {
     // results of the first page
-    var firstPageData
+    let firstPageData
     try {
       firstPageData = getBrapiData(response)
     } catch(error) {
       return deferred.reject(error)
     }
-    var totalPages = response.metadata.pagination.totalPages
+    let totalPages = response.metadata.pagination.totalPages
 
     // Prepare Ajax request for all other pages (if any)
-    var requests = []
-    while (query.page < totalPages - 1) {
-      query.page++
-      // clone query parameters to avoid modifications
-      var currentQuery = $.extend({}, query)
-      requests.push($.get(url, currentQuery))
+    let requests = []
+    while (page < totalPages - 1) {
+      page++
+      requests.push($.get(url, {...params, page}))
     }
 
     if (requests.length >= 1) {
       // Executing all page requests asynchronously
       whenAll(requests).done(function(responses) {
         // Aggregate results of all pages (except the first)
-        var otherPagesData = $.map(responses, function(response) {
+        let otherPagesData = $.map(responses, function(response) {
           try {
             return getBrapiData(response[0])
           } catch(error) {
@@ -93,25 +93,4 @@ function fetchAllPages(breedingAPIEndpoint, path, params) {
 
   // Return "deferred" value (aka. "future" value)
   return deferred
-}
-
-export class BreedingAPIClient {
-
-  constructor(breedingAPIEndpoint) {
-    this.breedingAPIEndpoint = breedingAPIEndpoint
-  }
-
-  /**
-  * Asynchronously load list of observation variable ontologies of a BreedingAPI endpoint
-  */
-  fetchOntologies() {
-    return fetchAllPages(this.breedingAPIEndpoint, "/ontologies", { pageSize: 100 })
-  }
-
-  /**
-   * Asynchronously load list of observation variables of a BreedingAPI endpoint
-   */
-  fetchVariables() {
-    return fetchAllPages(this.breedingAPIEndpoint, "/variables", { pageSize: 200 })
-  }
 }

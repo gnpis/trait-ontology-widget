@@ -23,7 +23,7 @@ build() {
 
   echo -ne "[JS]\t"
   echo " ${JS_FILES} => ${DEST_FILE}.js "
-  "${MODULES}/browserify/bin/cmd.js" "${JS_FILES}" -t babelify --debug -o "${DEST_FILE}.js" &
+  "${MODULES}/browserify/bin/cmd.js" "${JS_FILES}" --global-transform babelify --debug -o "${DEST_FILE}.js" &
   # the '--debug' option adds source mapping for easier debugging in web inspector
 
   echo -ne "[CSS]\t"
