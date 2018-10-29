@@ -19,27 +19,33 @@
     <script type="text/javascript">
       var widget = new CropOntologyWidget("#trait-ontology-widget", {
         // Breeding API server
-        "breedingAPIEndpoint": "https://urgi.versailles.inra.fr/ws/webresources/brapi/v1/",
+        //"breedingAPIEndpoint": "https://urgi.versailles.inra.fr/ws/webresources/brapi/v1/",
+        //"breedingAPIEndpoint": "http://urgi.versailles.inra.fr/gnpis-core-srv/brapi/v1/",
+        "breedingAPIEndpoint": "http://urgi148:8080/gnpis-core-srv/brapi/v1/",
         // options
         "showCheckBoxes": true, "useSearchField": true
       });
+      widget.setHeight(700)
     </script>
 
     <!-- Example JS interactions with the widget -->
     <button onclick="getIds()">Get selected node IDs</button>
+    <button onclick="showSelected()">Show only selected</button>
     <button onclick="widget.showAll()">Show all</button>
     <button onclick="widget.hideAll()">Hide all</button>
     <button onclick="widget.reset()">Reset</button>
     <button onclick="widget.resetSelection()">Reset selection</button>
     <button onclick="emptyOutput()">Clear output below</button>
+    <button onclick="widget.setHeight(600)">Set height 600px</button>
+    <button onclick="widget.setHeight(1000)">Set height 1000px</button>
 
     <div id="output"></div>
     <script type="text/javascript">
       var output = document.getElementById("output");
       function emptyOutput() {
         output.querySelectorAll("div").forEach(function(element) {
-	  element.remove();
-	});
+          element.remove();
+        });
       }
       function logOutput(action, message) {
         var div = document.createElement('div');
@@ -52,16 +58,21 @@
         output.prepend(div);
       }
 
+      function showSelected() {
+        widget.showOnly(widget.getSelectedLeafIds())
+      }
+
       function getIds() {
         var ids = widget.getSelectedNodeIds();
         if (!ids.length) ids = "No node selected";
-	logOutput("Get selected leaf node ids:", ids.join(", "));
+        else ids = ids.join(", ")
+        logOutput("Get selected leaf node ids:", ids);
       }
 
       // Display selection change
       widget.addSelectionChangeHandler(function(el, node) {
         logOutput("Node selection:", node.id);
-	getIds();
+        getIds();
       });
     </script>
     <style>

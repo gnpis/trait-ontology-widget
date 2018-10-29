@@ -1,248 +1,216 @@
-var $ = require('jquery');
-var Arrays = require('../utils').Arrays;
+const $ = require('jquery')
 
-// List of keys that should appear on top of the detail view
-var prioritizedKeys = ["ontologyName"];
+import Arrays from '../utils/Arrays'
+import LangUtils from '../utils/LangUtils'
+import { isEmpty } from '../utils'
+import { getNodeText } from '../tree/TreeBuilder'
+import LanguageSelector from '../ui/LanguageSelector'
 
-// Special keys (keys that are displayed in a special way or not displayed at all)
-var specialKeys =  ["ontologyDbId", "links", "language"];
+// Details panel view
+export default class DetailsPanel {
+  constructor(widget) {
+    this.widget = widget
+    this.defaultTilte = 'Details'
+    this.$detailsBox = $('<div class="details">')
+    this.$details = $('<div>')
+    this.$title = $('<h2>').text(this.defaultTilte)
+    this.$table = $('<table>')
+    this.$detailsBox.append(this.$title, this.$details.append(this.$table))
+  }
 
-// Map from key name (BrAPI field) to display name
-var keyDisplayName = {
-  "observationVariableDbId": "Identifier",
-  "traitDbId": "Identifier",
-  "methodDbId": "Identifier",
-  "scaleDbId": "Identifier"
-};
+  /**
+  * Returns the jQuery element
+  */
+  getElement() {
+    return this.$detailsBox
+  }
 
-// List of sections
-var variableSections = ["trait", "method", "scale"];
+  /**
+  * Clear details
+  */
+  clear() {
+    this.$table.empty()
+    this.$title.attr("class", "")
+    this.$title.text(this.defaultTilte)
+    this.currentDisplayedNode = null
+  }
 
-// Test if value can de displayed
-function isDisplayable(obj) {
-  if (obj !== null && obj !== undefined) {
-    // Not empty string
-    if (typeof obj === "string" && obj.trim() !== "") return true;
-    // Valid number
-    if (typeof obj === "number" && obj !== NaN) return true;
-    // Not empty array of displayable values
-    if ($.isArray(obj) && obj.length >= 1) {
-      var ok = true;
-      $.each(obj, function(element) {
-        return ok = ok && isDisplayable(element);
-      });
-      return ok;
+  refreshItem() {
+    if (this.currentDisplayedNode) {
+      this.displayItem(this.currentDisplayedNode)
     }
   }
-  return false;
+
+  /**
+  * Display details for an item (<li>) of the jstree
+  */
+  displayItem(node) {
+    // Clear details
+    this.clear()
+
+    let language = this.widget.jsTreePanel.getSelectedLanguage()
+    let translatedData = node.data[language]
+    if (!translatedData) {
+      let otherLanguage = Object.getOwnPropertyNames(node.data)[0]
+      if (node.type != 'ontology' && node.type != 'traitClass') {
+        let languageName = LangUtils.getLanguageName(language).toLowerCase()
+        let otherLanguageName = LangUtils.getLanguageName(otherLanguage).toLowerCase()
+        let nodeType = parseCamelCase(node.type)
+        let message = `
+          This ${nodeType} description was not translated in ${languageName}
+          (the following description remains in ${otherLanguageName}).
+        `
+        this.displayMessage('warning', message)
+      }
+
+      translatedData = node.data[otherLanguage]
+      language = otherLanguage
+    }
+
+    // Change detail view title
+    this.$title
+      .addClass(`labeled ${node.type}`)
+      .text(getNodeText(node, language))
+
+    // Generate detail view content
+    let rows = sectionView(node.type, translatedData)
+    this.$table.append(...rows)
+
+    this.currentDisplayedNode = node
+  }
+
+  /**
+  * Display message in detail panel
+  */
+  displayMessage(type, message) {
+    this.clear()
+    this.$table.append(
+      $('<tr>').append(
+        $('<td colspan=2>').addClass(type).text(message)
+      )
+    )
+  }
+}
+
+
+function parseCamelCase(str) {
+  return str
+    // split camel case: insert a space before all caps
+    .replace(/([A-Z][a-z])/g, ' $1')
+    .toLowerCase().trim()
 }
 
 // Format a key for display
 function formatKey(str) {
-  if (keyDisplayName[str]) {
-    // Use preformated key names from "keyDisplayName" map
-    return keyDisplayName[str];
-  } else {
-    // Or convert camel case to words separated by spaces and capitalized first letter
-    return str
-      // split camel case: insert a space before all caps
-      .replace(/([A-Z][a-z])/g, ' $1')
-      .toLowerCase().trim()
-      // uppercase first letter
-      .replace(/^./, function(str){ return str.toUpperCase(); })
-  }
+  // Convert camel case to words separated by spaces and capitalized first letter
+  return parseCamelCase(str)
+    // uppercase first letter
+    .replace(/^./, s => s.toUpperCase())
 }
 
-// Create a new table section (ex: trait, method, scale)
-function createSection(name, type) {
-  var $tr = $('<tr>');
-  var $th = $('<th class="section" colspan=2>').appendTo($tr);
-  var $h3 = $('<h3 class="labeled '+type+'">').text(name).appendTo($th);
-  return $tr;
-}
-
-// Create a new table row with key and value columns
-function createRow(key, value) {
-  if (key && value && value.jquery) {
-    var $tr = $('<tr>');
-    var keyDisplayName = formatKey(key);
-    $('<td class="key">').text(keyDisplayName).appendTo($tr);
-    $('<td class="value">').append(value).appendTo($tr);
-    return $tr;
-  }
-}
 
 // Create html to display string, array of string, etc.
 function createValueView(value) {
   if ($.isArray(value) && value.length >= 1) {
-    // Display list of values
-    var $ul = $('<ul>');
+    // Generate <li>
+    let items = $.map(value, (v) => $('<li>').text(v))
     // Append values as unordered list (ul) of list item (li)
-    return $ul.append.apply($ul, $.map(value, function(v) {
-      return $('<li>').text(v);
-    }));
+    return $('<ul>').append(...items)
   } else if (value.match && value.match(/^https?:\/\/.+/)) {
     // Display links
-    return $('<a>').text(value).attr("href", value).attr("target", "_blank");
+    return $('<a target="_blank">').attr("href", value).text(value)
   }
   // Display text
-  return $('<span>').text(value);
+  return $('<span>').text(value)
 }
+
 
 // Create list of links (for links on list of ontologies)
-function createLinks(links) {
-  var $ul = $('<ul>');
-  // Append links as unordered list (ul) of list item (li) of anchor (a)
-  return $ul.append.apply($ul, $.map(links, function(link) {
-    return $('<li>').append($('<a>').attr("href", link["href"]).text(link["rel"]));
-  }));
+function createLinksView(links) {
+  let items = $.map(links, ({rel, href}) => {
+    return $('<li>').append(
+      $('<a target="_blank">').attr('href', href).attr('title', rel).text(rel)
+    )
+  })
+  // Append links as list (ul) of list item (li) of anchor (a)
+  return $('<ul>').append(...items)
 }
 
-function createRows(key, value) {
-  var rows = [];
-  if (Arrays.contains(specialKeys, key)) {
-    // Special cases (custom display)
 
-    if (key === "links") {
-      rows.push(createRow(key, createLinks(value)));
-    }
-
-  } else {
-    // Any other keys
-    if ($.isPlainObject(value)) {
-
-      if (Arrays.contains(variableSections, key)) {
-        // Variable section (trait, method or scale)
-
-        // Section name
-        var name = value["name"];
-        if (name) {
-          // Format name
-          name = formatKey(name);
-        } else {
-          // Use the identifier as section name (unformated)
-          name = value[key+'DbId'];
-        }
-
-        // Create new section & content
-        var section = createSection(name, key);
-        var subRows = createDetailView(value);
-
-        // Content not empty
-        if (subRows && subRows.length > 0) {
-          rows.push(section);
-          rows = rows.concat(subRows);
-        }
-      } else {
-        // Display object (like scale.validValues)
-        var subRows = $.map(value, function(i, subKey) {
-          return createRows(subKey, value[subKey]);
-        });
-
-        if (subRows && subRows.length > 0) {
-          rows = rows.concat(subRows);
-        }
-      }
-    } else if (isDisplayable(value)) {
-      rows.push(createRow(key, createValueView(value)));
-    }
-  }
-  return rows;
+// Initialize a property configuration (type, label function, view function)
+function createProperty({label, view} = {}) {
+  return {'type': 'property',
+          'label': label || formatKey,
+          'view': view || createValueView}
 }
 
-function createDetailView(nodeData) {
-  var rows = [];
-
-  // Display prioritized keys first
-  $.each(nodeData, function(key, value) {
-    if (Arrays.contains(prioritizedKeys, key)) {
-      rows = rows.concat(createRows(key, value));
-    }
-  });
-
-  // Display other keys
-  $.each(nodeData, function(key, value) {
-    if (!Arrays.contains(prioritizedKeys, key)) {
-      rows = rows.concat(createRows(key, value));
-    }
-  });
-  return rows;
+// Identifier property factory
+function createIdentifier() {
+  return createProperty({label: () => 'Identifier'})
 }
 
-// Details panel view
-module.exports = function DetailsPanel() {
-  var detailsPanel = this;
-  var $details = $('<div class="details"></div>');
-  var defaultTilte = "Details";
-  var $title = $('<h2>'+defaultTilte+'</h2>').appendTo($details);
-
-  var $detailsTable = $('<table></table>');
-  $details.append($('<div>').append($detailsTable));
-
-  /**
-   * Returns the jQuery element
-   */
-  this.getElement = function() {
-    return $details;
-  }
-
-  /**
-   * Clear details
-   */
-  this.clear = function() {
-    $detailsTable.empty();
-    $title.attr("class", "");
-    $title.text(defaultTilte);
-  }
-
-  /**
-   * Display details for an item (<li>) of the jstree
-   */
-  var currentDisplayedItem = null;
-  this.displayItem = function($item, node) {
-
-    // Clear details
-    detailsPanel.clear();
-
-    // Change detail view title
-    $title.attr("class", node.type+" labeled");
-    $title.text(node.text);
-
-    // Generate detail view content
-    $detailsTable.append.apply($detailsTable, createDetailView(node.data));
-
-    // Update style to indicate the item that is being displayed in the detail view
-
-    if (currentDisplayedItem != null) {
-      currentDisplayedItem.removeClass("displayed");
-    }
-
-    if ($item != null) {
-      $item.addClass("displayed");
-      currentDisplayedItem = $item;
-    }
+// List in order the first properties for each object types
+// (additional properties are display as generic properties)
+const PROP_CONFIGS = {
+  'ontologyName': createProperty(),
+  'observationVariableDbId': createIdentifier(),
+  'traitDbId': createIdentifier(),
+  'methodDbId': createIdentifier(),
+  'scaleDbId': createIdentifier(),
+  // Display links with special view
+  'links': createProperty({view: createLinksView}),
+  'language': {'type': 'hidden'},
+  'ontologyDbId': {'type': 'hidden'}
 }
 
-  /**
-   * Display error message in detail panel
-   */
-  this.displayError = function(errorMessage) {
-    detailsPanel.clear();
+function getPropertyConfiguration(propertyName) {
+  if (!PROP_CONFIGS.hasOwnProperty(propertyName)) {
+    PROP_CONFIGS[propertyName] = createProperty()
+  }
+  return PROP_CONFIGS[propertyName]
+}
 
-    var errorCell = $("<td class='error'></td>").text(errorMessage);
-    var errorRow = $("<tr>").append(errorCell);
-    $detailsTable.append(errorRow);
+// Create view for property (may produce multiple table rows)
+function createPropertyView(key, value, config, parentSection) {
+  let rows = []
+  if ($.isPlainObject(value)) {
+    rows = rows.concat(sectionView(key, value, parentSection))
+  } else if(!isEmpty(value) && config.type != 'hidden') {
+    let keyText = config.label(key)
+    let $valueView = config.view(value)
+    if (keyText && $valueView && $valueView.jquery) {
+      rows.push(
+        $('<tr>').append(
+          $('<td class="key">').text(keyText),
+          $('<td class="value">').append($valueView))
+      )
+    }
+  }
+  return rows
+}
+
+// Create view for section of data (may produce multiple table rows)
+function sectionView(section, data, parentSection) {
+  let rows = []
+  if (isEmpty(data)) return rows
+
+  // Add section title if not at the root and if the section is labeled
+  if (parentSection === 'variable') {
+    let sectionTitle = data['name'] || formatKey(section)
+    rows.push(
+      $('<tr>').append(
+        $('<th class="section" colspan=2>').append(
+          $(`<h3 class="labeled ${section}">`).text(sectionTitle)))
+    )
   }
 
-  /**
-   * Display info message in detail panel
-   */
-  this.displayInfo = function(message) {
-    detailsPanel.clear();
-
-    var cell = $("<td class='info'></td>").text(message);
-    var row = $("<tr>").append(cell);
-    $detailsTable.append(row);
+  // For each properties in data object
+  let dataProperties = Object.getOwnPropertyNames(data)
+  for (let property of dataProperties) {
+    let propConfig = getPropertyConfiguration(property)
+    rows = rows.concat(createPropertyView(
+      property, data[property], propConfig, section
+    ))
   }
-
-};
+  return rows
+}

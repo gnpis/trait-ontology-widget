@@ -6,6 +6,14 @@
 // Import JSTree lesscss styles
 @import "node_modules/jstree/src/themes/default/style";
 
+@opacityPulseFrom : 0.25;
+@opacityPulseTo : 0.6;
+@keyframes opactityPulse {
+    0% { opacity: @opacityPulseFrom; }
+    50% { opacity: @opacityPulseTo; }
+    100% { opacity: @opacityPulseFrom; }
+}
+
 // Inline required images into this file
 .jstree {
   // Loading gif
@@ -34,6 +42,25 @@
   font: 12px Arial, Helvetica, freesans, clean, sans-serif;
   float: left;
   clear: both;
+  margin: 0;
+
+  &.loading {
+    cursor: wait;
+
+    .tree {
+      pointer-events: none;
+      filter: grayscale(100%);
+      animation: opactityPulse 1.75s infinite ease-in-out;
+    }
+
+    .details td.loading {
+        animation: opactityPulse 1.75s infinite ease-in-out;
+        font-weight: 700;
+        font-size: 16px;
+        text-align: center;
+        margin: 0;
+    }
+  }
 
   h2 {
     margin-top: 15px;
@@ -69,6 +96,22 @@
   .treeBox {
     float: left;
     width: 50%;
+
+    // Language selector
+    .languageSelector {
+      float: right;
+      color: black;
+      font-weight: normal;
+
+      select {
+        border: 1px solid gray;
+        width: auto;
+      }
+    }
+
+    .notTranslated {
+      font-style: italic;
+    }
 
     // Search box
     .searchBox {
@@ -147,6 +190,7 @@
       vertical-align: top;
       text-align: left;
       padding-left: 20px;
+      width: 100%;
 
       * {
         /* These are technically the same, but use both */
@@ -170,6 +214,15 @@
       text-align: center;
       font-weight: bold;
     }
+
+    // Warning message
+    td.warning {
+      color: #F39237;
+      text-align: center;
+      font-style: italic;
+      padding-bottom: 20px;
+    }
+
   }
 
   // Labeled text (ontology, trait class, trait, variable, method and scale)
