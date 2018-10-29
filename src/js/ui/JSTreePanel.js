@@ -170,23 +170,27 @@ export default class JSTreePanel {
         let node = this.jstree.get_node(nodeId)
         let item = this.getItemByNodeId(nodeId)
 
-        if (item.length > 0) {
-          // First translate node that are visible
-          this.jstree.rename_node(node, getNodeText(node, language))
+        let oldText = node['text']
+        let newText = getNodeText(node, language)
+
+        // Ignore nodes that don't change
+        if (oldText === newText) continue
+
+        if (item.length > 0 && item.is(':visible')) {
+          // First rename nodes displayed in tree
+          this.jstree.rename_node(node, newText)
         } else {
-          renameLater.push([node, language])
+          // Rename later other nodes
+          renameLater.push([node, newText])
         }
       }
 
-      // Batch renames for later
-      for (let batch of Arrays.batch(renameLater, 300)) {
-        // Then later
-        setTimeout(() => {
-          for (let [node, language] of batch) {
-            this.jstree.rename_node(node, getNodeText(node, language))
-          }
-        }, 300)
-      }
+      // Rename other nodes later (to reduce UI freeze)
+      setTimeout(() => {
+        for (let [node, newText] of renameLater) {
+          this.jstree.rename_node(node, newText)
+        }
+      }, 300)
     })
   }
 
