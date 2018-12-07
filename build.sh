@@ -15,7 +15,7 @@ build() {
   mkdir -p "${BUILD_FOLDER}"
 
   JS_FILES=${SOURCE_FOLDER}"/js/main.js"
-  LESS_FILES="$(ls ${SOURCE_FOLDER}/less/*.less)"
+  LESS_FILES="${SOURCE_FOLDER}/less/main.less"
 
   # Run browserify => Bundle widget and its dependencies into one file
   echo "Bundling:"
@@ -24,12 +24,14 @@ build() {
   echo -ne "[JS]\t"
   echo " ${JS_FILES} => ${DEST_FILE}.js "
   "${MODULES}/browserify/bin/cmd.js" "${JS_FILES}" -t babelify --debug -o "${DEST_FILE}.js" &
+  "${MODULES}/browserify/bin/cmd.js" "${JS_FILES}" -t babelify --debug -o "${DEST_FILE}.bundle.js" -s CropOntologyWidget &
   # the '--debug' option adds source mapping for easier debugging in web inspector
 
   echo -ne "[CSS]\t"
   echo " ${LESS_FILES} => ${DEST_FILE}.css "
   #"${MODULES}/npm-css/bin/npm-css" "${LESS_FILES}" -o "${DEST_FILE}.css"
   "${MODULES}/less/bin/lessc" "${LESS_FILES}" "${DEST_FILE}.css" &
+  "${MODULES}/less/bin/lessc" "${SOURCE_FOLDER}/less/widget.less" "${BUILD_FOLDER}/widget.css" &
   wait
 
   echo ""

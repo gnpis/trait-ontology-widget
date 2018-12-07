@@ -17,6 +17,13 @@ const DEFAULT_OPTIONS = {
   createDiv: false
 }
 
+let document;
+try {
+  document = global.document;
+} catch(e) {
+  document = window.document;
+}
+
 export class CropOntologyWidget {
     constructor(selector, options) {
       // Options (overide the defaults with options given)
@@ -39,7 +46,7 @@ export class CropOntologyWidget {
       }
 
       // Attach components on the DOM when ready
-      $(global.document).ready(() => {
+      $(document).ready(() => {
         if (!this.options.createDiv) {
           this.$root = $(selector)
           if (this.$root.length === 0) {
@@ -179,4 +186,7 @@ export class CropOntologyWidget {
       this.jsTreePanel.reset()
     }
 }
-global.CropOntologyWidget = CropOntologyWidget
+
+try {
+  global.CropOntologyWidget = CropOntologyWidget
+} catch (e) {}
