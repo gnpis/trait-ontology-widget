@@ -1,4 +1,33 @@
+@charset "UTF-8";
+/*
+ * This less file can be compiled to CSS using the LESSC compiler (http://lesscss.org)
+ */
 
+// Import JSTree lesscss styles
+@import "node_modules/jstree/src/themes/default/style";
+
+
+// Inline required images into this file
+.jstree {
+  // Loading gif
+  & > .jstree-container-ul .jstree-loading > .jstree-ocl {
+    background-image: data-uri('node_modules/jstree/src/themes/default/throbber.gif');
+  }
+
+  // Node icons
+  .jstree-node, .jstree-icon, .jstree-file, .jstree-folder, .jstree-ok,
+  .jstree-checkbox, .jstree-er {
+    background-image: data-uri('node_modules/jstree/src/themes/default/32px.png');
+  }
+
+  .jstree-last {
+    background: none;
+  }
+}
+
+/*
+ * Widget custom styles
+ */
 @opacityPulseFrom : 0.25;
 @opacityPulseTo : 0.6;
 @keyframes opactityPulse {
@@ -37,7 +66,7 @@
     margin-top: 15px;
     margin-bottom: 5px;
     padding-bottom: 5px;
-    font-size: 16px;
+    font-size: 1.25rem;
     color: #333;
     border-bottom: 1px solid #DDD !important;
     padding-left: 10px;
@@ -51,6 +80,7 @@
   h3 {
     text-transform: none;
     margin: 0;
+    font-size: 1.10rem;
   }
 
   ul {
@@ -73,6 +103,7 @@
       float: right;
       color: black;
       font-weight: normal;
+      font-size: 0.95rem;
 
       select {
         border: 1px solid gray;
