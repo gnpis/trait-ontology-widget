@@ -2,6 +2,9 @@
 set -e
 
 SOURCE_FOLDER="./src"
+JS_SOURCE=${SOURCE_FOLDER}"/js/main.js"
+LESS_SOURCE="${SOURCE_FOLDER}/less/cropOntologyWidget.less"
+
 BUILD_FOLDER="./dist"
 MODULES="./node_modules"
 
@@ -10,44 +13,68 @@ MODULES="./node_modules"
   exit 1;
 }
 
-build() {
-  [ -d "${BUILD_FOLDER}" ] && rm -rf "${BUILD_FOLDER}"/*
-  mkdir -p "${BUILD_FOLDER}"
+build_module() {
+  # Prepare NPM module to be imported in GPDS
+  MODULE_FOLDER="${BUILD_FOLDER}/module"
+  mkdir -p "${MODULE_FOLDER}"
+  DEST_MODULE="${MODULE_FOLDER}/cropOntologyWidget.module"
 
-  JS_FILES=${SOURCE_FOLDER}"/js/main.js"
-  LESS_FILES="$(ls ${SOURCE_FOLDER}/less/*.less)"
+  echo "NPM module:"
 
+  # JS (export widget for ES6 import)
+  echo -e "[JS]\t ${JS_SOURCE} => ${DEST_MODULE}.js "
+  "${MODULES}/browserify/bin/cmd.js" "${JS_SOURCE}" -t babelify --debug -o "${DEST_MODULE}.js" -s CropOntologyWidget
+
+  # CSS
+  echo -e "[CSS]\t ${LESS_SOURCE} => ${DEST_MODULE}.css "
+  cp "${DEST_FILE}.css" "${DEST_MODULE}.css"
+
+  # Style images
+  cp ${MODULES}/jstree/dist/themes/default/*.{png,gif} "${MODULE_FOLDER}"
+
+  echo ""
+}
+
+build_bundle() {
   # Run browserify => Bundle widget and its dependencies into one file
   echo "Bundling:"
   DEST_FILE="${BUILD_FOLDER}/cropOntologyWidget"
 
-  echo -ne "[JS]\t"
-  echo " ${JS_FILES} => ${DEST_FILE}.js "
-  "${MODULES}/browserify/bin/cmd.js" "${JS_FILES}" -t babelify --debug -o "${DEST_FILE}.js" &
+  echo -e "[JS]\t ${JS_SOURCE} => ${DEST_FILE}.js "
+  "${MODULES}/browserify/bin/cmd.js" "${JS_SOURCE}" -t babelify --debug -o "${DEST_FILE}.js" &
   # the '--debug' option adds source mapping for easier debugging in web inspector
 
-  echo -ne "[CSS]\t"
-  echo " ${LESS_FILES} => ${DEST_FILE}.css "
-  #"${MODULES}/npm-css/bin/npm-css" "${LESS_FILES}" -o "${DEST_FILE}.css"
-  "${MODULES}/less/bin/lessc" "${LESS_FILES}" "${DEST_FILE}.css" &
-  wait
+  echo -e "[CSS]\t  ${LESS_SOURCE} => ${DEST_FILE}.css "
+  "${MODULES}/less/bin/lessc" "${LESS_SOURCE}" "${DEST_FILE}.css" &
 
   echo ""
+  wait
+}
 
+build_minify() {
   # Run uglify => Reduce file size
   echo "Minifying:"
   DEST_MIN_FILE="${BUILD_FOLDER}/cropOntologyWidget.min"
 
-  echo -ne "[JS]\t"
-  echo " ${DEST_FILE}.js => ${DEST_MIN_FILE}.js "
+  echo -e "[JS]\t  ${DEST_FILE}.js => ${DEST_MIN_FILE}.js "
   "${MODULES}/.bin/uglifyjs" "${DEST_FILE}.js" -o "${DEST_MIN_FILE}.js" &
 
-  echo -ne "[CSS]\t"
-  echo " ${DEST_FILE}.css => ${DEST_MIN_FILE}.css "
+  echo -e "[CSS]\t  ${DEST_FILE}.css => ${DEST_MIN_FILE}.css "
   "${MODULES}/.bin/cleancss" "${DEST_FILE}.css" -o "${DEST_MIN_FILE}.css" &
   wait
 
   echo ""
+}
+
+build() {
+  [ -d "${BUILD_FOLDER}" ] && rm -rf "${BUILD_FOLDER}"/*
+  mkdir -p "${BUILD_FOLDER}"
+
+  build_bundle
+
+  build_minify
+
+  build_module
 
   cp -R ./demo/* "${BUILD_FOLDER}"
 }

@@ -6,13 +6,6 @@
 // Import JSTree lesscss styles
 @import "node_modules/jstree/src/themes/default/style";
 
-@opacityPulseFrom : 0.25;
-@opacityPulseTo : 0.6;
-@keyframes opactityPulse {
-    0% { opacity: @opacityPulseFrom; }
-    50% { opacity: @opacityPulseTo; }
-    100% { opacity: @opacityPulseFrom; }
-}
 
 // Inline required images into this file
 .jstree {
@@ -35,6 +28,13 @@
 /*
  * Widget custom styles
  */
+@opacityPulseFrom : 0.25;
+@opacityPulseTo : 0.6;
+@keyframes opactityPulse {
+  0% { opacity: @opacityPulseFrom; }
+  50% { opacity: @opacityPulseTo; }
+  100% { opacity: @opacityPulseFrom; }
+}
 
 .ontology-widget {
   width: 100%;
@@ -54,11 +54,11 @@
     }
 
     .details td.loading {
-        animation: opactityPulse 1.75s infinite ease-in-out;
-        font-weight: 700;
-        font-size: 16px;
-        text-align: center;
-        margin: 0;
+      animation: opactityPulse 1.75s infinite ease-in-out;
+      font-weight: 700;
+      font-size: 16px;
+      text-align: center;
+      margin: 0;
     }
   }
 
@@ -66,7 +66,7 @@
     margin-top: 15px;
     margin-bottom: 5px;
     padding-bottom: 5px;
-    font-size: 16px;
+    font-size: 1.25rem;
     color: #333;
     border-bottom: 1px solid #DDD !important;
     padding-left: 10px;
@@ -80,6 +80,7 @@
   h3 {
     text-transform: none;
     margin: 0;
+    font-size: 1.10rem;
   }
 
   ul {
@@ -102,6 +103,7 @@
       float: right;
       color: black;
       font-weight: normal;
+      font-size: 0.95rem;
 
       select {
         border: 1px solid gray;
